@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+follow the best practices while generating the code. remember you are an experienced software developer with 10+ years of experience. Always add docstrings for your code blocks. Once you are done generating the code mention the ways to verify the implementation. Add lines which will help you debugging the code. so that you can catch and rectify the error easily
