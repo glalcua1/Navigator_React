@@ -19,7 +19,6 @@ interface KPIMetric {
   description: string
   format: 'currency' | 'percentage' | 'number' | 'decimal'
   color: 'blue' | 'green' | 'amber' | 'red' | 'purple'
-  target?: number
   isImportant?: boolean
 }
 
@@ -35,7 +34,6 @@ const kpiMetrics: KPIMetric[] = [
     description: 'Current average room rate across all channels',
     format: 'currency',
     color: 'blue',
-    target: 300,
     isImportant: true,
   },
   {
@@ -49,7 +47,6 @@ const kpiMetrics: KPIMetric[] = [
     description: 'Rate parity compliance across OTA channels',
     format: 'percentage',
     color: 'green',
-    target: 95,
     isImportant: true,
   },
   {
@@ -63,7 +60,6 @@ const kpiMetrics: KPIMetric[] = [
     description: 'Ranking position in competitive set (out of 15)',
     format: 'number',
     color: 'purple',
-    target: 1,
     isImportant: true,
   },
   {
@@ -77,7 +73,6 @@ const kpiMetrics: KPIMetric[] = [
     description: 'Revenue impact from local events and conferences',
     format: 'percentage',
     color: 'amber',
-    target: 120,
     isImportant: true,
   },
 ]
@@ -258,23 +253,7 @@ function KPICard({ metric }: { metric: KPIMetric }) {
               {formatValue(animatedValue, metric.format)}
             </div>
             
-            {/* Target Progress - Enhanced Spacing */}
-            {metric.target && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Target</span>
-                  <span>{Math.round((typeof metric.value === 'number' ? metric.value : parseFloat(metric.value.toString())) / metric.target * 100)}%</span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full bg-gradient-to-r ${colorClasses.gradient} transition-all duration-1000`}
-                    style={{
-                      width: `${Math.min((typeof metric.value === 'number' ? metric.value : parseFloat(metric.value.toString())) / metric.target * 100, 100)}%`
-                    }}
-                  />
-                </div>
-              </div>
-            )}
+
           </div>
 
           {/* Description - Enhanced Spacing */}
@@ -305,7 +284,6 @@ function KPICard({ metric }: { metric: KPIMetric }) {
  * - Single row layout (4 columns on desktop)
  * - Animated metric counters
  * - Trend indicators with color coding
- * - Target progress visualization
  * - Hover effects and interactions
  * - Important metrics highlighting
  * - Professional color scheme
