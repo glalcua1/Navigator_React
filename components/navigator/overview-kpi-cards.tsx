@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { TrendingUp, TrendingDown, DollarSign, Users, Target, AlertTriangle, Eye, Minus, Shield, Calendar } from "lucide-react"
+import { useDateContext } from "@/components/date-context"
+import { format, differenceInDays } from "date-fns"
 
 /**
  * KPI Data Configuration
@@ -22,60 +24,81 @@ interface KPIMetric {
   isImportant?: boolean
 }
 
-const kpiMetrics: KPIMetric[] = [
-  {
-    id: 'average-rate',
-    title: 'Average Rate',
-    value: 295.50,
-    previousValue: 278.25,
-    change: 6.2,
-    changeType: 'increase',
-    icon: DollarSign,
-    description: 'Current average room rate across all channels',
-    format: 'currency',
-    color: 'blue',
-    isImportant: true,
-  },
-  {
-    id: 'parity-status',
-    title: 'Parity Status',
-    value: 94.2,
-    previousValue: 89.7,
-    change: 5.0,
-    changeType: 'increase',
-    icon: Shield,
-    description: 'Rate parity compliance across OTA channels',
-    format: 'percentage',
-    color: 'green',
-    isImportant: true,
-  },
-  {
-    id: 'market-position',
-    title: 'Market Position',
-    value: 2,
-    previousValue: 3,
-    change: -33.3,
-    changeType: 'increase',
-    icon: Target,
-    description: 'Ranking position in competitive set (out of 15)',
-    format: 'number',
-    color: 'purple',
-    isImportant: true,
-  },
-  {
-    id: 'event-impact',
-    title: 'Event Impact',
-    value: 127.5,
-    previousValue: 98.2,
-    change: 29.9,
-    changeType: 'increase',
-    icon: Calendar,
-    description: 'Revenue impact from local events and conferences',
-    format: 'percentage',
-    color: 'amber',
-    isImportant: true,
-  },
-]
+/**
+ * Generate KPI data based on date range
+ * Creates realistic metrics that vary based on the selected time period
+ */
+function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
+  const days = differenceInDays(endDate, startDate) + 1
+  const isLongTerm = days > 30
+  
+  // Base values that change based on date range
+  const baseRate = 280 + (days * 0.5) + (Math.random() * 40)
+  const parityBase = 90 + (days * 0.1) + (Math.random() * 8)
+  const marketPos = Math.max(1, Math.min(5, Math.round(3 - (days * 0.02))))
+  const eventImpact = 100 + (days * 0.8) + (Math.random() * 30)
+  
+  // Previous period values (simulate comparison)
+  const prevRate = baseRate * (0.95 + Math.random() * 0.1)
+  const prevParity = parityBase * (0.92 + Math.random() * 0.15)
+  const prevMarketPos = Math.max(1, Math.min(5, marketPos + (Math.random() > 0.5 ? 1 : -1)))
+  const prevEventImpact = eventImpact * (0.85 + Math.random() * 0.3)
+  
+  return [
+    {
+      id: 'average-rate',
+      title: 'Average Rate',
+      value: baseRate,
+      previousValue: prevRate,
+      change: ((baseRate - prevRate) / prevRate) * 100,
+      changeType: baseRate > prevRate ? 'increase' : 'decrease',
+      icon: DollarSign,
+      description: `Average room rate for ${format(startDate, 'MMM dd')} - ${format(endDate, 'MMM dd')}`,
+      format: 'currency',
+      color: 'blue',
+      isImportant: true,
+    },
+    {
+      id: 'parity-status',
+      title: 'Parity Status',
+      value: parityBase,
+      previousValue: prevParity,
+      change: ((parityBase - prevParity) / prevParity) * 100,
+      changeType: parityBase > prevParity ? 'increase' : 'decrease',
+      icon: Shield,
+      description: `Rate parity compliance over ${days} day${days > 1 ? 's' : ''}`,
+      format: 'percentage',
+      color: 'green',
+      isImportant: true,
+    },
+    {
+      id: 'market-position',
+      title: 'Market Position',
+      value: marketPos,
+      previousValue: prevMarketPos,
+      change: ((prevMarketPos - marketPos) / prevMarketPos) * 100, // Inverted for ranking
+      changeType: marketPos < prevMarketPos ? 'increase' : 'decrease',
+      icon: Target,
+      description: `Ranking position in competitive set (out of 15)`,
+      format: 'number',
+      color: 'purple',
+      isImportant: true,
+    },
+    {
+      id: 'event-impact',
+      title: 'Event Impact',
+      value: eventImpact,
+      previousValue: prevEventImpact,
+      change: ((eventImpact - prevEventImpact) / prevEventImpact) * 100,
+      changeType: eventImpact > prevEventImpact ? 'increase' : 'decrease',
+      icon: Calendar,
+      description: `Revenue impact from events during selected period`,
+      format: 'percentage',
+      color: 'amber',
+      isImportant: true,
+    },
+  ]
+}
 
 /**
  * Animated Counter Hook
@@ -292,6 +315,14 @@ function KPICard({ metric }: { metric: KPIMetric }) {
  * @version 2.0.0
  */
 export function OverviewKpiCards() {
+  // Use date context for dynamic data generation
+  const { startDate, endDate, isLoading } = useDateContext()
+  
+  // Generate KPI data based on selected date range
+  const kpiMetrics = useMemo(() => {
+    return generateKPIData(startDate, endDate)
+  }, [startDate, endDate])
+
   // Calculate summary statistics for debugging
   const summaryStats = useMemo(() => {
     const totalMetrics = kpiMetrics.length
@@ -307,15 +338,23 @@ export function OverviewKpiCards() {
       positiveChanges,
       negativeChanges,
     }
-  }, [])
+  }, [kpiMetrics])
 
   return (
     <div 
       className="space-y-8 animate-fade-in"
       data-component-name="OverviewKpiCards"
     >
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-8">
+          <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+          <span className="ml-2 text-sm text-muted-foreground">Updating metrics...</span>
+        </div>
+      )}
+
       {/* KPI Grid - Enhanced Spacing */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 ${isLoading ? 'opacity-50 transition-opacity' : ''}`}>
         {kpiMetrics.map((metric) => (
           <KPICard key={metric.id} metric={metric} />
         ))}

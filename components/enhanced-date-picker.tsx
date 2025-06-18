@@ -12,13 +12,14 @@ import {
   isSameMonth,
   isWithinInterval,
   addDays,
+  subDays,
 } from "date-fns"
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-type DateMode = "currentMonth" | "next30days" | "next60days" | "next90days" | "customRange"
+type DateMode = "last7days" | "last14days" | "last30days" | "currentMonth" | "next30days" | "next60days" | "next90days" | "customRange"
 
 interface EnhancedDatePickerProps {
   startDate?: Date
@@ -31,16 +32,25 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
   const [selectedStartDate, setSelectedStartDate] = React.useState<Date | undefined>(startDate)
   const [selectedEndDate, setSelectedEndDate] = React.useState<Date | undefined>(endDate)
   const [currentMonth, setCurrentMonth] = React.useState<Date>(selectedStartDate || new Date())
-  const [mode, setMode] = React.useState<DateMode>("customRange")
+  const [mode, setMode] = React.useState<DateMode>("last30days")
   const [isOpen, setIsOpen] = React.useState(false)
 
+  // Initialize with last 30 days if no dates provided
   React.useEffect(() => {
-    setSelectedStartDate(startDate)
-    setSelectedEndDate(endDate)
+    if (!startDate && !endDate) {
+      const today = new Date()
+      const thirtyDaysAgo = subDays(today, 29)
+      setSelectedStartDate(thirtyDaysAgo)
+      setSelectedEndDate(today)
+      onChange?.(thirtyDaysAgo, today)
+    } else {
+      setSelectedStartDate(startDate)
+      setSelectedEndDate(endDate)
+    }
     if (startDate) {
       setCurrentMonth(startDate)
     }
-  }, [startDate, endDate])
+  }, [startDate, endDate, onChange])
 
   const handleDateSelect = (date: Date) => {
     if (!selectedStartDate || selectedEndDate) {
@@ -61,6 +71,18 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
     let newEndDate: Date | undefined
 
     switch (newMode) {
+      case "last7days":
+        newStartDate = subDays(today, 6) // 7 days including today
+        newEndDate = today
+        break
+      case "last14days":
+        newStartDate = subDays(today, 13) // 14 days including today
+        newEndDate = today
+        break
+      case "last30days":
+        newStartDate = subDays(today, 29) // 30 days including today
+        newEndDate = today
+        break
       case "currentMonth":
         newStartDate = startOfMonth(today)
         newEndDate = endOfMonth(today)
@@ -105,6 +127,17 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
     }
     setIsOpen(false)
   }
+
+  const quickDateOptions = [
+    { mode: "last7days" as DateMode, label: "Last 7 Days" },
+    { mode: "last14days" as DateMode, label: "Last 14 Days" },
+    { mode: "last30days" as DateMode, label: "Last 30 Days" },
+    { mode: "currentMonth" as DateMode, label: "Current Month" },
+    { mode: "next30days" as DateMode, label: "Next 30 Days" },
+    { mode: "next60days" as DateMode, label: "Next 60 Days" },
+    { mode: "next90days" as DateMode, label: "Next 90 Days" },
+    { mode: "customRange" as DateMode, label: "Custom Range" },
+  ]
 
   const renderCalendarMonth = (monthDate: Date) => {
     const monthStart = startOfMonth(monthDate)
@@ -198,9 +231,10 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
     if (selectedStartDate && selectedEndDate) {
       return `${format(selectedStartDate, "dd MMM ''yy")} - ${format(selectedEndDate, "dd MMM ''yy")}`
     } else if (selectedStartDate) {
-      return format(selectedStartDate, "dd MMM ''yy")
+      return `${format(selectedStartDate, "dd MMM ''yy")} - Select end date`
+    } else {
+      return "Select date range"
     }
-    return "Select date range"
   }, [selectedStartDate, selectedEndDate])
 
   return (
@@ -208,94 +242,64 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
-          className={cn("h-8 gap-1 font-normal min-w-[120px] justify-start bg-white border-gray-300", className)}
+          className={cn(
+            "justify-start text-left font-normal h-9 min-w-[240px]",
+            !selectedStartDate && "text-muted-foreground",
+            className
+          )}
         >
-          <CalendarIcon className="h-4 w-4" />
+          <CalendarIcon className="mr-2 h-4 w-4" />
           {displayDateRange}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <div className="flex border border-gray-200 rounded-lg overflow-hidden bg-white">
-          {/* Left sidebar with options */}
-          <div className="w-48 border-r border-gray-200 bg-gray-50 p-4">
-            <div className="space-y-2">
-              <Button
-                variant={mode === "currentMonth" ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start",
-                  mode === "currentMonth"
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "text-gray-700 hover:bg-gray-100",
-                )}
-                onClick={() => handleModeChange("currentMonth")}
-              >
-                Current month
-              </Button>
-              <Button
-                variant={mode === "next30days" ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start",
-                  mode === "next30days"
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "text-gray-700 hover:bg-gray-100",
-                )}
-                onClick={() => handleModeChange("next30days")}
-              >
-                Next 30 days
-              </Button>
-              <Button
-                variant={mode === "next60days" ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start",
-                  mode === "next60days"
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "text-gray-700 hover:bg-gray-100",
-                )}
-                onClick={() => handleModeChange("next60days")}
-              >
-                Next 60 days
-              </Button>
-              <Button
-                variant={mode === "next90days" ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start",
-                  mode === "next90days"
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "text-gray-700 hover:bg-gray-100",
-                )}
-                onClick={() => handleModeChange("next90days")}
-              >
-                Next 90 days
-              </Button>
-              <Button
-                variant={mode === "customRange" ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start",
-                  mode === "customRange"
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : "text-gray-700 hover:bg-gray-100",
-                )}
-                onClick={() => handleModeChange("customRange")}
-              >
-                Custom
-              </Button>
+        <div className="flex">
+          {/* Quick Date Options Sidebar */}
+          <div className="w-48 border-r border-gray-200 p-4">
+            <h4 className="font-semibold text-sm text-gray-700 mb-3">Quick Select</h4>
+            <div className="space-y-1">
+              {quickDateOptions.map((option) => (
+                <Button
+                  key={option.mode}
+                  variant={mode === option.mode ? "default" : "ghost"}
+                  size="sm"
+                  className="w-full justify-start text-sm"
+                  onClick={() => handleModeChange(option.mode)}
+                >
+                  {option.label}
+                </Button>
+              ))}
             </div>
           </div>
 
-          {/* Calendar area */}
-          <div className="p-4">
-            <div className="flex gap-8">
+          {/* Calendar */}
+          {mode === "customRange" ? (
+            <div className="p-4">
               {renderCalendarMonth(currentMonth)}
-              {renderCalendarMonth(addMonths(currentMonth, 1))}
+              <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
+                <Button variant="outline" size="sm" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button 
+                  size="sm" 
+                  onClick={handleApply}
+                  disabled={!selectedStartDate || !selectedEndDate}
+                >
+                  Apply
+                </Button>
+              </div>
             </div>
-            <div className="flex justify-end gap-2 mt-4">
-              <Button variant="ghost" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button onClick={handleApply}>Apply</Button>
+          ) : (
+            <div className="p-4 w-64">
+              <div className="text-center">
+                <h4 className="font-semibold text-gray-700 mb-2">Selected Range</h4>
+                <p className="text-sm text-gray-600 mb-4">{displayDateRange}</p>
+                <Button size="sm" onClick={handleApply} className="w-full">
+                  Apply
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

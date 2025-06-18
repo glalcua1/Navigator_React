@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu"
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts"
 import { Calendar, TrendingUp, Filter, Download, Maximize2, ChevronDown, Eye, EyeOff } from "lucide-react"
+import { useDateContext } from "@/components/date-context"
+import { format, eachDayOfInterval, differenceInDays } from "date-fns"
 
 /**
  * Chart Data Configuration
@@ -28,48 +30,54 @@ interface RateData {
   events?: string[]
 }
 
-const generateRateData = (): RateData[] => {
+const generateRateData = (startDate: Date, endDate: Date): RateData[] => {
   const baseData: RateData[] = []
-  const startDate = new Date('2024-01-01')
-  const endDate = new Date('2024-01-31')
+  const days = eachDayOfInterval({ start: startDate, end: endDate })
   
-  // Generate daily data
-  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    const date = d.toISOString().split('T')[0]
+  // Generate daily data for the selected date range
+  days.forEach((d, index) => {
+    const date = format(d, 'yyyy-MM-dd')
     const dayOfWeek = d.getDay()
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
     
-    // Base rates with realistic variations
+    // Base rates with realistic variations and seasonal trends
     const baseRate = 280 + (Math.random() - 0.5) * 40
     const weekendMultiplier = isWeekend ? 1.15 : 1.0
-    const seasonalFactor = 1 + 0.2 * Math.sin((d.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 7))
+    const seasonalFactor = 1 + 0.2 * Math.sin((index / days.length) * Math.PI * 2)
     
-    // Add special events
+    // Add special events (simulate events every 10-15 days)
     const events: string[] = []
-    if (d.getDate() >= 15 && d.getDate() <= 17) {
+    const dayOfMonth = d.getDate()
+    if (dayOfMonth >= 15 && dayOfMonth <= 17 && d.getMonth() % 2 === 0) {
       events.push("Tech Conference")
     }
-    if (d.getDate() >= 25 && d.getDate() <= 27) {
+    if (dayOfMonth >= 25 && dayOfMonth <= 27 && d.getMonth() % 3 === 0) {
       events.push("Music Festival") 
+    }
+    if (dayOfMonth >= 5 && dayOfMonth <= 7 && d.getMonth() % 4 === 0) {
+      events.push("Trade Show")
     }
     
     const eventMultiplier = events.length > 0 ? 1.25 : 1.0
     
+    // Add market trends based on date range length
+    const trendFactor = days.length > 30 ? 1 + (index / days.length) * 0.1 : 1.0
+    
     baseData.push({
       date,
       timestamp: d.getTime(),
-      direct: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier),
-      booking: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 0.95),
-      expedia: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 0.92),
-      agoda: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 0.88),
-      hotelscom: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 0.90),
-      competitor1: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 1.05),
-      competitor2: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 0.98),
-      competitor3: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * 1.08),
+      direct: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor),
+      booking: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 0.95),
+      expedia: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 0.92),
+      agoda: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 0.88),
+      hotelscom: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 0.90),
+      competitor1: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 1.05),
+      competitor2: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 0.98),
+      competitor3: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * 1.08),
       occupancy: Math.round(75 + (Math.random() - 0.5) * 30 + (events.length * 10)),
       events: events.length > 0 ? events : undefined,
     })
-  }
+  })
   
   return baseData
 }
@@ -249,21 +257,31 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
  * @version 2.0.0
  */
 export function RateTrendsChart() {
+  // Date context for global date filtering
+  const { startDate, endDate, isLoading } = useDateContext()
+  
   // State management
   const [chartType, setChartType] = useState<'line' | 'area' | 'bar'>('line')
-  const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d'>('30d')
   const [showOccupancy, setShowOccupancy] = useState(false)
   const [visibleChannels, setVisibleChannels] = useState<Set<string>>(
     new Set(channelConfigs.filter(c => c.isVisible).map(c => c.key))
   )
 
-  // Generate and filter data
-  const rawData = useMemo(() => generateRateData(), [])
-  
+  // Generate data based on selected date range from context
   const chartData = useMemo(() => {
-    const days = dateRange === '7d' ? 7 : dateRange === '30d' ? 30 : 90
-    return rawData.slice(-days)
-  }, [rawData, dateRange])
+    return generateRateData(startDate, endDate)
+  }, [startDate, endDate])
+
+  // Calculate date range info for display
+  const dateRangeInfo = useMemo(() => {
+    const days = differenceInDays(endDate, startDate) + 1
+    return {
+      days,
+      label: days <= 7 ? `${days} Days` : days <= 30 ? `${days} Days` : `${days} Days`,
+      startLabel: format(startDate, 'MMM dd'),
+      endLabel: format(endDate, 'MMM dd, yyyy')
+    }
+  }, [startDate, endDate])
 
   // Calculate statistics for debugging
   const statistics = useMemo(() => {
@@ -419,22 +437,17 @@ export function RateTrendsChart() {
             <CardTitle className="text-xl font-bold text-foreground flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-brand-600" />
               Rate Trends Analysis
+              {isLoading && (
+                <div className="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+              )}
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Compare your rates across channels and monitor competitor pricing
+              {dateRangeInfo.startLabel} - {dateRangeInfo.endLabel} • {dateRangeInfo.days} days • {chartData.length} data points
             </p>
           </div>
           
           {/* Chart Controls */}
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Date Range Selector */}
-            <Tabs value={dateRange} onValueChange={(value: any) => setDateRange(value)}>
-              <TabsList className="grid grid-cols-3 w-48">
-                <TabsTrigger value="7d" className="text-xs">7 Days</TabsTrigger>
-                <TabsTrigger value="30d" className="text-xs">30 Days</TabsTrigger>
-                <TabsTrigger value="90d" className="text-xs">90 Days</TabsTrigger>
-              </TabsList>
-            </Tabs>
 
             {/* Chart Type Selector */}
             <DropdownMenu>

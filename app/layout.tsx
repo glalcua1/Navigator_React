@@ -5,6 +5,7 @@ import { Header } from "@/components/navigator/header"
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { LayoutContent } from "@/components/layout-content"
 import { ThemeProvider } from "@/components/theme-provider"
+import { DateProvider } from "@/components/date-context"
 
 /**
  * Root Layout Metadata
@@ -65,9 +66,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* Fixed Header - Appears on all pages */}
-          <Header />
-          <LayoutContent>{children}</LayoutContent>
+          <DateProvider>
+            {/* Fixed Header - Appears on all pages */}
+            <Header />
+            <LayoutContent>{children}</LayoutContent>
+          </DateProvider>
         </ThemeProvider>
       </body>
     </html>

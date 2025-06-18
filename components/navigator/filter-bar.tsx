@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge"
 import { ChevronDown, Filter, X, Calendar, Users, Bed } from "lucide-react"
 import { EnhancedDatePicker } from "@/components/enhanced-date-picker"
+import { useDateContext } from "@/components/date-context"
 
 /**
  * Filter Configuration
@@ -69,16 +70,19 @@ interface FilterBarProps {
  * Enhanced Filter Bar Component
  * 
  * Professional filter interface with:
- * - Responsive design with proper spacing
+ * - Perfect vertical alignment and consistent heights
+ * - Responsive design with proper spacing and hierarchy
  * - Icon integration for visual clarity
- * - Clean alignment and typography
- * - Interactive filter management
- * - Active filter visualization
+ * - Clean typography and visual balance
+ * - Interactive filter management with clear actions
+ * - Active filter visualization with mobile-friendly layout
+ * - Proper container width matching page layout
  * 
  * @component
- * @version 2.0.0
+ * @version 3.0.0
  */
 export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
+  const { startDate, endDate, setDateRange } = useDateContext()
   const [selectedFilters, setSelectedFilters] = React.useState(() =>
     allFiltersList.reduce(
       (acc, group) => {
@@ -88,8 +92,6 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
       {} as Record<string, string>,
     ),
   )
-  
-  const [dateRange, setDateRange] = React.useState<{ startDate?: Date; endDate?: Date }>({})
 
   /**
    * Handle filter selection changes
@@ -102,10 +104,12 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
   /**
    * Handle date range updates
    */
-  const handleDateRangeChange = React.useCallback((startDate?: Date, endDate?: Date) => {
-    setDateRange({ startDate, endDate })
-    console.log(`📅 Date range changed: ${startDate?.toLocaleDateString()} - ${endDate?.toLocaleDateString()}`)
-  }, [])
+  const handleDateRangeChange = React.useCallback((newStartDate?: Date, newEndDate?: Date) => {
+    if (newStartDate && newEndDate) {
+      setDateRange(newStartDate, newEndDate)
+      console.log(`📅 Date range changed: ${newStartDate.toLocaleDateString()} - ${newEndDate.toLocaleDateString()}`)
+    }
+  }, [setDateRange])
 
   /**
    * Reset individual filter to default
@@ -137,78 +141,160 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
       className="bg-background border-b border-border shadow-sm"
       data-component-name="FilterBar"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center gap-3 py-4">
-          
-          {/* Date Range Picker */}
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <EnhancedDatePicker
-              startDate={dateRange.startDate}
-              endDate={dateRange.endDate}
-              onChange={handleDateRangeChange}
-            />
-          </div>
-
-          {/* Divider */}
-          <div className="hidden sm:block w-px h-6 bg-border" />
-
-          {/* Visible Filters */}
-          <div className="flex flex-wrap items-center gap-2">
-            {visibleFiltersList.map((group) => {
-              const Icon = group.icon
-              const isActive = selectedFilters[group.name] !== group.defaultOption
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="max-w-7xl xl:max-w-none mx-auto">
+          <div className="flex items-center justify-between py-4 gap-4">
+            
+            {/* Left Section - Primary Filters */}
+            <div className="flex items-center gap-4 flex-1 min-w-0">
               
-              return (
-                <DropdownMenu key={group.name}>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant={isActive ? "default" : "outline"}
-                      size="sm"
-                      className={`h-9 gap-2 font-medium transition-all duration-200 ${
-                        isActive 
-                          ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600" 
-                          : "hover:bg-accent hover:text-accent-foreground"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="truncate max-w-[120px]">
-                        {selectedFilters[group.name]}
-                      </span>
-                      <ChevronDown className="w-3 h-3 opacity-70" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-56">
-                    {group.options?.map((option) => (
-                      <DropdownMenuItem
-                        key={option}
-                        onSelect={() => handleFilterChange(group.name, option)}
-                        className={`cursor-pointer ${
-                          selectedFilters[group.name] === option 
-                            ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300" 
-                            : ""
-                        }`}
+              {/* Date Range Picker */}
+              <div className="flex items-center gap-2 shrink-0">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <EnhancedDatePicker
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={handleDateRangeChange}
+                />
+              </div>
+
+              {/* Divider */}
+              <div className="hidden sm:block w-px h-6 bg-border shrink-0" />
+
+              {/* Visible Filters */}
+              <div className="flex items-center gap-2 flex-wrap min-w-0">
+                {visibleFiltersList.map((group) => {
+                  const Icon = group.icon
+                  const isActive = selectedFilters[group.name] !== group.defaultOption
+                  
+                  return (
+                    <DropdownMenu key={group.name}>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant={isActive ? "default" : "outline"}
+                          size="sm"
+                          className={`h-9 gap-2 font-medium transition-all duration-200 shrink-0 ${
+                            isActive 
+                              ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600" 
+                              : "hover:bg-accent hover:text-accent-foreground"
+                          }`}
+                        >
+                          <Icon className="w-4 h-4" />
+                          <span className="truncate max-w-[120px]">
+                            {selectedFilters[group.name]}
+                          </span>
+                          <ChevronDown className="w-3 h-3 opacity-70" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-56">
+                        {group.options?.map((option) => (
+                          <DropdownMenuItem
+                            key={option}
+                            onSelect={() => handleFilterChange(group.name, option)}
+                            className={`cursor-pointer ${
+                              selectedFilters[group.name] === option 
+                                ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300" 
+                                : ""
+                            }`}
+                          >
+                            <Icon className="w-4 h-4 mr-2 opacity-70" />
+                            {option}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )
+                })}
+              </div>
+
+              {/* Active More Filters Display */}
+              {getActiveFilters.length > 0 && (
+                <>
+                  <div className="hidden lg:block w-px h-6 bg-border shrink-0" />
+                  <div className="hidden lg:flex items-center gap-2 flex-wrap">
+                    {getActiveFilters.slice(0, 2).map((filter) => (
+                      <Badge
+                        key={filter.name}
+                        variant="secondary"
+                        className="h-9 px-3 gap-2 bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800 flex items-center shrink-0"
                       >
-                        <Icon className="w-4 h-4 mr-2 opacity-70" />
-                        {option}
-                      </DropdownMenuItem>
+                        <span className="text-xs font-medium whitespace-nowrap">
+                          {filter.name}: {selectedFilters[filter.name]}
+                        </span>
+                        <button
+                          onClick={() => handleResetFilter(filter.name)}
+                          className="hover:bg-brand-200 dark:hover:bg-brand-800 rounded-full p-0.5 transition-colors"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </Badge>
                     ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )
-            })}
+                    {getActiveFilters.length > 2 && (
+                      <Badge variant="outline" className="h-9 px-3 text-xs flex items-center shrink-0">
+                        +{getActiveFilters.length - 2} more
+                      </Badge>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Right Section - Action Buttons */}
+            <div className="flex items-center gap-3 shrink-0">
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-4 text-muted-foreground hover:text-foreground font-medium"
+                  onClick={() => {
+                    // Reset all filters to default
+                    setSelectedFilters(
+                      allFiltersList.reduce(
+                        (acc, group) => {
+                          acc[group.name] = group.defaultOption
+                          return acc
+                        },
+                        {} as Record<string, string>,
+                      )
+                    )
+                    setDateRange({})
+                    console.log("🔄 All filters reset")
+                  }}
+                >
+                  Clear All
+                </Button>
+              )}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 gap-2 font-medium hover:bg-accent hover:text-accent-foreground transition-all duration-200 relative"
+                onClick={onMoreFiltersClick}
+              >
+                <Filter className="w-4 h-4" />
+                <span className="hidden sm:inline">More Filters</span>
+                <span className="sm:hidden">Filters</span>
+                {getActiveFilters.length > 0 && (
+                  <Badge 
+                    className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs bg-brand-600 text-white rounded-full flex items-center justify-center"
+                  >
+                    {getActiveFilters.length}
+                  </Badge>
+                )}
+              </Button>
+            </div>
           </div>
 
-          {/* Active More Filters Display */}
+          {/* Mobile Active Filters Row */}
           {getActiveFilters.length > 0 && (
-            <>
-              <div className="hidden sm:block w-px h-6 bg-border" />
+            <div className="lg:hidden pb-4 border-t border-border/50 pt-3">
               <div className="flex flex-wrap items-center gap-2">
-                {getActiveFilters.slice(0, 3).map((filter) => (
+                <span className="text-xs font-medium text-muted-foreground shrink-0">Active:</span>
+                {getActiveFilters.slice(0, 4).map((filter) => (
                   <Badge
                     key={filter.name}
                     variant="secondary"
-                    className="h-7 px-3 gap-2 bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800"
+                    className="h-8 px-2 gap-1 bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800 flex items-center"
                   >
                     <span className="text-xs font-medium">
                       {filter.name}: {selectedFilters[filter.name]}
@@ -221,61 +307,14 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                     </button>
                   </Badge>
                 ))}
-                {getActiveFilters.length > 3 && (
-                  <Badge variant="outline" className="h-7 px-2 text-xs">
-                    +{getActiveFilters.length - 3} more
+                {getActiveFilters.length > 4 && (
+                  <Badge variant="outline" className="h-8 px-2 text-xs flex items-center">
+                    +{getActiveFilters.length - 4} more
                   </Badge>
                 )}
               </div>
-            </>
+            </div>
           )}
-
-          {/* Spacer */}
-          <div className="flex-1" />
-
-          {/* More Filters Button */}
-          <div className="flex items-center gap-2">
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-9 px-3 text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  // Reset all filters to default
-                  setSelectedFilters(
-                    allFiltersList.reduce(
-                      (acc, group) => {
-                        acc[group.name] = group.defaultOption
-                        return acc
-                      },
-                      {} as Record<string, string>,
-                    )
-                  )
-                  setDateRange({})
-                  console.log("🔄 All filters reset")
-                }}
-              >
-                Clear All
-              </Button>
-            )}
-            
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 gap-2 font-medium hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-              onClick={onMoreFiltersClick}
-            >
-              <Filter className="w-4 h-4" />
-              More Filters
-              {getActiveFilters.length > 0 && (
-                <Badge 
-                  className="ml-1 h-5 w-5 p-0 text-xs bg-brand-600 text-white rounded-full flex items-center justify-center"
-                >
-                  {getActiveFilters.length}
-                </Badge>
-              )}
-            </Button>
-          </div>
         </div>
       </div>
     </div>

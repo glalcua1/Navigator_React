@@ -221,28 +221,28 @@ export default function HelpPage() {
       
       {/* Header Section */}
       <section className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto py-6">
-            <div className="text-center space-y-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="max-w-7xl xl:max-w-none mx-auto py-6 lg:py-8 xl:py-10">
+            <div className="text-center space-y-4 lg:space-y-6">
               <div className="flex items-center justify-center gap-3">
-                <div className="p-3 rounded-xl bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-950 dark:to-purple-950">
-                  <BookOpen className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+                <div className="p-3 lg:p-4 rounded-xl bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-950 dark:to-purple-950">
+                  <BookOpen className="w-8 h-8 lg:w-10 lg:h-10 text-brand-600 dark:text-brand-400" />
                 </div>
-                <h1 className="text-3xl font-bold text-foreground">Knowledge Center</h1>
+                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground">Knowledge Center</h1>
               </div>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg lg:text-xl xl:text-2xl text-muted-foreground max-w-4xl mx-auto">
                 Everything you need to master revenue management and maximize your hotel's performance
               </p>
               
               {/* Search Bar */}
-              <div className="max-w-2xl mx-auto mt-6">
+              <div className="max-w-3xl mx-auto mt-6 lg:mt-8">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground" />
                   <Input
                     placeholder="Search articles, guides, and tutorials..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-3 text-base"
+                    className="pl-10 lg:pl-12 pr-4 py-3 lg:py-4 text-base lg:text-lg"
                   />
                 </div>
               </div>
@@ -252,8 +252,8 @@ export default function HelpPage() {
       </section>
 
       {/* Main Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8 lg:py-10 xl:py-12">
+        <div className="max-w-7xl xl:max-w-none mx-auto">
           
           <Tabs defaultValue="knowledge" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
@@ -280,8 +280,8 @@ export default function HelpPage() {
               
               {/* Quick Start Section */}
               <section>
-                <h2 className="text-xl font-bold text-foreground mb-4">Quick Start Guides</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-4 lg:mb-6">Quick Start Guides</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
                   {knowledgeArticles.filter(article => article.category === "Getting Started").map((article) => (
                     <Card key={article.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
                       <CardHeader className="pb-3">
@@ -317,8 +317,8 @@ export default function HelpPage() {
 
               {/* Category Filter */}
               <section>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-foreground">All Articles</h2>
+                <div className="flex items-center justify-between mb-4 lg:mb-6">
+                  <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">All Articles</h2>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((category) => (
                       <Button
@@ -335,7 +335,7 @@ export default function HelpPage() {
                 </div>
 
                 {/* Articles Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-8">
                   {filteredArticles.map((article) => (
                     <Card key={article.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
                       <CardHeader className="pb-3">
@@ -382,8 +382,8 @@ export default function HelpPage() {
             </TabsContent>
 
             {/* Video Tutorials Tab */}
-            <TabsContent value="videos" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <TabsContent value="videos" className="space-y-6 lg:space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8">
                 {videoTutorials.map((video) => (
                   <Card key={video.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
                     <div className="relative">
