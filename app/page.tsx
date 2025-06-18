@@ -19,7 +19,8 @@ import {
   Shield, 
   TrendingUp, 
   MapPin, 
-  Clock 
+  Clock,
+  BarChart3
 } from "lucide-react"
 
 /**
@@ -187,38 +188,18 @@ function getInsightStyling(type: string) {
 
 /**
  * Main Dashboard Home Page
- * 
- * Professional dashboard layout with:
- * - Reduced spacing for better content density
- * - Functional quick actions with navigation
- * - Updated KPIs: Average Rate, Parity Status, Market Position, Event Impact
- * - Enhanced visual hierarchy with compact spacing
- * - Responsive grid system
- * - Interactive quick actions
- * - Real-time insights and alerts
- * - Performance metrics overview
- * - Professional color scheme
- * - Original data structure maintained
- * 
- * @component
- * @version 2.0.0
+ * Enhanced for large screens with better responsive design
  */
 export default function Home() {
   const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false)
 
-  /**
-   * Handle more filters click
-   */
   const handleMoreFiltersClick = () => {
     setIsFilterSidebarOpen(true)
+    console.log("🔍 Opening filter sidebar")
   }
 
-  /**
-   * Handle quick action clicks
-   */
   const handleQuickActionClick = (action: typeof quickActions[0]) => {
-    console.log(`🚀 Quick Action clicked: ${action.title}`)
-    action.action()
+    console.log(`🚀 Quick action clicked: ${action.title}`)
   }
 
   return (
@@ -227,19 +208,19 @@ export default function Home() {
       {/* Filter Bar - Edge to Edge */}
       <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
 
-      {/* Main Content Container - Reduced spacing */}
+      {/* Main Content Container */}
       <div className="w-full">
 
-        {/* Welcome Section - Compact */}
+        {/* Welcome Section */}
         <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm dashboard-header">
-          <div className="w-full px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
-            <div className="max-w-7xl mx-auto">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-4 lg:py-6">
+            <div className="max-w-7xl xl:max-w-none mx-auto">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
                     Welcome back, Hotel Manager
                   </h1>
-                  <p className="text-sm sm:text-base text-muted-foreground max-w-3xl leading-relaxed">
+                  <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-muted-foreground max-w-4xl leading-relaxed">
                     Monitor your property performance, optimize rates, and stay ahead of the competition with real-time insights and data-driven recommendations.
                   </p>
                 </div>
@@ -257,49 +238,49 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Content Sections - Reduced spacing */}
+        {/* Content Sections */}
         <div className="w-full space-y-0">
 
-          {/* Recent Insights Section - Compact */}
+          {/* Recent Insights Section */}
           <section className="w-full bg-gradient-to-r from-slate-50/50 to-blue-50/50 dark:from-slate-900/50 dark:to-slate-800/50 py-3 lg:py-4 border-b border-slate-200/50 dark:border-slate-700/50">
-            <div className="w-full px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto">
+            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              <div className="max-w-7xl xl:max-w-none mx-auto">
                 <Card className="card-enhanced bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/80">
-                  <CardContent className="p-4 lg:p-5">
+                  <CardContent className="p-4 lg:p-6 xl:p-8">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg lg:text-xl font-bold text-foreground flex items-center gap-2">
+                      <h2 className="text-lg lg:text-xl xl:text-2xl font-bold text-foreground flex items-center gap-2">
                         <div className="p-1.5 rounded-lg bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">
-                          <Activity className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                          <Activity className="w-4 h-4 lg:w-5 lg:h-5 text-brand-600 dark:text-brand-400" />
                         </div>
                         Recent Insights
                       </h2>
-                      <Button variant="ghost" size="sm" className="text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800">
+                      <Button variant="ghost" size="sm" className="text-xs lg:text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">
                         View All
                       </Button>
                     </div>
                     
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
                       {insights.slice(0, 3).map((insight, index) => {
                         const styling = getInsightStyling(insight.type)
                         
                         return (
                           <div 
                             key={insight.id} 
-                            className={`p-3 rounded-lg border-l-4 ${styling.border} ${styling.bg} transition-all duration-200`}
+                            className={`p-3 lg:p-4 rounded-lg border-l-4 ${styling.border} ${styling.bg} transition-all duration-200 hover:shadow-sm`}
                           >
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-foreground text-sm mb-1">
+                                <h3 className="font-semibold text-foreground text-sm lg:text-base mb-1">
                                   {insight.title}
                                 </h3>
-                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">
                                   {insight.description}
                                 </p>
                               </div>
                               <Button 
                                 variant="ghost" 
                                 size="sm" 
-                                className="text-xs h-6 px-2 font-medium hover:bg-white/50 dark:hover:bg-slate-800/50"
+                                className="text-xs h-6 px-2 font-medium hover:bg-white/50 dark:hover:bg-slate-800/50 shrink-0"
                               >
                                 {insight.action}
                               </Button>
@@ -314,14 +295,14 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Key Performance Indicators Section - Compact */}
-          <section className="w-full bg-white dark:bg-slate-900 py-4 lg:py-6 kpi-section">
-            <div className="w-full px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto space-y-6">
+          {/* Key Performance Indicators Section */}
+          <section className="w-full bg-white dark:bg-slate-900 py-4 lg:py-6 xl:py-8 kpi-section">
+            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              <div className="max-w-7xl xl:max-w-none mx-auto space-y-6 lg:space-y-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-1">Key Performance Indicators</h2>
-                    <p className="text-muted-foreground text-sm">Monitor your property's essential metrics and performance trends</p>
+                    <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-1">Key Performance Indicators</h2>
+                    <p className="text-muted-foreground text-sm lg:text-base">Monitor your property's essential metrics and performance trends</p>
                   </div>
                   <Button variant="outline" size="sm" className="gap-2 font-medium">
                     <Clock className="w-4 h-4" />
@@ -333,147 +314,34 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Main Analytics Section - Vertical Layout */}
-          <section className="w-full bg-gradient-to-r from-blue-50/30 to-purple-50/30 dark:from-slate-800/30 dark:to-slate-900/30 py-6 lg:py-8">
-            <div className="w-full px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto space-y-6">
+          {/* Main Analytics Section */}
+          <section className="w-full bg-gradient-to-r from-blue-50/30 to-purple-50/30 dark:from-slate-800/30 dark:to-slate-900/30 py-6 lg:py-8 xl:py-10">
+            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              <div className="max-w-7xl xl:max-w-none mx-auto space-y-6 lg:space-y-8">
                 
-                {/* Rate Trends Chart - Full Width */}
+                {/* Rate Trends Chart */}
                 <div className="w-full rate-trends-chart">
                   <RateTrendsChart />
                 </div>
 
-                {/* Widgets Below Chart - Vertical Stack */}
-                <div className="space-y-6">
+                {/* Widgets Layout - Vertical Stack */}
+                <div className="space-y-6 lg:space-y-8">
                   
                   {/* Market Demand Widget */}
                   <div className="market-demand-section">
                     <MarketDemandWidget />
                   </div>
                   
-                  {/* Property Health Score Widget */}
-                  <PropertyHealthScoreWidget />
+                  {/* Property Health Score Widget - Positioned Below Market Demand */}
+                  <div className="property-health-section">
+                    <PropertyHealthScoreWidget />
+                  </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Additional Information Cards - Compact */}
-          <section className="w-full bg-white dark:bg-slate-900 py-6 lg:py-8 border-b border-slate-200/50 dark:border-slate-700/50">
-            <div className="w-full px-4 sm:px-6 lg:px-8">
-              <div className="max-w-7xl mx-auto">
-                <div className="mb-6">
-                  <h2 className="text-xl lg:text-2xl font-bold text-foreground mb-1">System Overview</h2>
-                  <p className="text-muted-foreground text-sm">Real-time status and performance summary</p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                  
-                  {/* Status Overview - Compact */}
-                  <Card className="card-enhanced hover:shadow-lg transition-all duration-300 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/80">
-                    <CardContent className="p-4 lg:p-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800">
-                          <Shield className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-foreground text-base">System Status</h3>
-                          <p className="text-xs text-muted-foreground">All systems operational</p>
-                        </div>
-                      </div>
 
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Rate Parity</span>
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full" />
-                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Active</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Data Refresh</span>
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Live</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Competitor Monitor</span>
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full" />
-                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Running</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Market Intelligence - Compact */}
-                  <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-4 lg:p-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-xl bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">
-                          <Compass className="w-5 h-5 text-brand-600 dark:text-brand-400" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-foreground text-base">Market Intelligence</h3>
-                          <p className="text-xs text-muted-foreground">Latest market trends</p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Market Position</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-foreground">#2 of 15</span>
-                            <TrendingUp className="w-3 h-3 text-emerald-500" />
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Avg Market Rate</span>
-                          <span className="text-xs font-bold text-foreground">$285</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Rate Variance</span>
-                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">+3.2%</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Quick Stats - Compact */}
-                  <Card className="card-enhanced hover:shadow-lg transition-all duration-300">
-                    <CardContent className="p-4 lg:p-5">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800">
-                          <Info className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-foreground text-base">Today's Summary</h3>
-                          <p className="text-xs text-muted-foreground">Key performance indicators</p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Bookings Today</span>
-                          <span className="text-xs font-bold text-foreground">47</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Revenue Generated</span>
-                          <span className="text-xs font-bold text-foreground">$12,450</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-muted-foreground">Avg Booking Value</span>
-                          <span className="text-xs font-bold text-foreground">$265</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </div>
 

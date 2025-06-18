@@ -15,8 +15,18 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1600px",
       },
+    },
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      '3xl': '1920px',
+      '4xl': '2560px',
     },
     extend: {
       colors: {
@@ -127,6 +137,21 @@ const config = {
         "text-demand-medium": "#0369a1", 
         "text-demand-high": "#0284c7",
         "text-demand-very-high": "#ffffff",
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '96': '24rem',
+        '104': '26rem',
+        '112': '28rem',
+        '128': '32rem',
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+        '10xl': '104rem',
+        'screen-3xl': '1920px',
+        'screen-4xl': '2560px',
       },
       borderRadius: {
         lg: "var(--radius)",

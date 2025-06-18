@@ -944,6 +944,251 @@ a {
   .focus-ring-inset {
     @apply focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500;
   }
+
+  /* Enhanced Container Utilities */
+  .container-8xl {
+    @apply max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 4xl:px-16;
+  }
+
+  .container-9xl {
+    @apply max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 4xl:px-16;
+  }
+
+  .container-10xl {
+    @apply max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 3xl:px-12 4xl:px-16;
+  }
+
+  /* Responsive Grid Systems for Large Screens */
+  .grid-responsive-cards {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-4 lg:gap-6 3xl:gap-8;
+  }
+
+  .grid-responsive-widgets {
+    @apply grid grid-cols-1 3xl:grid-cols-2 gap-6 lg:gap-8;
+  }
+
+  .grid-responsive-insights {
+    @apply grid grid-cols-1 lg:grid-cols-2 3xl:grid-cols-3 gap-4 lg:gap-6;
+  }
+
+  /* Enhanced Typography for Large Screens */
+  .text-responsive-h1 {
+    @apply text-2xl sm:text-3xl lg:text-4xl 3xl:text-5xl 4xl:text-6xl;
+  }
+
+  .text-responsive-h2 {
+    @apply text-xl lg:text-2xl 3xl:text-3xl 4xl:text-4xl;
+  }
+
+  .text-responsive-h3 {
+    @apply text-lg lg:text-xl 3xl:text-2xl 4xl:text-3xl;
+  }
+
+  .text-responsive-body {
+    @apply text-sm sm:text-base lg:text-lg 3xl:text-xl 4xl:text-2xl;
+  }
+
+  .text-responsive-caption {
+    @apply text-xs lg:text-sm 3xl:text-base 4xl:text-lg;
+  }
+
+  /* Enhanced Spacing for Large Screens */
+  .spacing-responsive-sm {
+    @apply space-y-4 lg:space-y-6 3xl:space-y-8;
+  }
+
+  .spacing-responsive-md {
+    @apply space-y-6 lg:space-y-8 3xl:space-y-10;
+  }
+
+  .spacing-responsive-lg {
+    @apply space-y-8 lg:space-y-10 3xl:space-y-12;
+  }
+
+  .padding-responsive-section {
+    @apply py-4 lg:py-6 3xl:py-8 4xl:py-10;
+  }
+
+  .padding-responsive-card {
+    @apply p-4 lg:p-5 3xl:p-6 4xl:p-8;
+  }
+
+  .padding-responsive-content {
+    @apply p-4 lg:p-6 3xl:p-8 4xl:p-10;
+  }
+
+  /* Navigation Widths for Different Screen Sizes */
+  .nav-width-collapsed {
+    @apply ml-0 md:ml-16 lg:ml-16 3xl:ml-20 4xl:ml-24;
+  }
+
+  .nav-width-expanded {
+    @apply ml-0 md:ml-64 lg:ml-64 3xl:ml-72 4xl:ml-80;
+  }
+
+  /* Dashboard-specific Layout Utilities */
+  .dashboard-content-width {
+    @apply w-full max-w-8xl 3xl:max-w-9xl 4xl:max-w-10xl mx-auto;
+  }
+
+  .dashboard-section-padding {
+    @apply px-4 sm:px-6 lg:px-8 3xl:px-12 4xl:px-16;
+  }
+
+  /* Enhanced Card Layouts */
+  .card-responsive {
+    @apply p-4 lg:p-5 3xl:p-6 4xl:p-8 rounded-lg lg:rounded-xl 3xl:rounded-2xl;
+  }
+
+  .card-icon-responsive {
+    @apply w-4 h-4 lg:w-5 lg:h-5 3xl:w-6 3xl:h-6 4xl:w-7 4xl:h-7;
+  }
+
+  /* Flexible Grid Systems */
+  .grid-auto-fit-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    .grid-auto-fit-responsive {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    .grid-auto-fit-responsive {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .grid-auto-fit-responsive {
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 2.5rem;
+    }
+  }
+
+  /* Data Display Optimizations */
+  .data-table-responsive {
+    @apply text-xs lg:text-sm 3xl:text-base;
+  }
+
+  .data-value-responsive {
+    @apply text-sm lg:text-base 3xl:text-lg 4xl:text-xl;
+  }
+
+  .data-label-responsive {
+    @apply text-xs lg:text-sm 3xl:text-base 4xl:text-lg;
+  }
+
+  /* Interactive Element Sizing */
+  .button-responsive {
+    @apply px-3 py-2 lg:px-4 lg:py-2.5 3xl:px-5 3xl:py-3 text-sm lg:text-base 3xl:text-lg;
+  }
+
+  .input-responsive {
+    @apply px-3 py-2 lg:px-4 lg:py-2.5 3xl:px-5 3xl:py-3 text-sm lg:text-base 3xl:text-lg;
+  }
+
+  /* Chart and Graph Containers */
+  .chart-container-responsive {
+    @apply h-64 lg:h-80 3xl:h-96 4xl:h-[32rem];
+  }
+
+  .chart-small-responsive {
+    @apply h-48 lg:h-56 3xl:h-64 4xl:h-72;
+  }
+
+  /* Dashboard-specific Animation Classes */
+  .dashboard-fade-in {
+    animation: dashboardFadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes dashboardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Ultra-wide Screen Optimizations */
+  @media (min-width: 2560px) {
+    .ultra-wide-spacing {
+      @apply space-y-12;
+    }
+
+    .ultra-wide-padding {
+      @apply px-20 py-12;
+    }
+
+    .ultra-wide-text {
+      @apply text-xl;
+    }
+
+    .ultra-wide-heading {
+      @apply text-6xl;
+    }
+  }
+
+  /* High DPI Display Optimizations */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .crisp-edges {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .pixel-perfect {
+      transform: translateZ(0);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+}
+
+/* Enhanced Media Queries for Specific Breakpoints */
+@media (min-width: 1920px) {
+  .dashboard-large-screen {
+    --spacing-unit: 2rem;
+    --content-padding: 3rem;
+    --card-padding: 2rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  .dashboard-ultra-wide {
+    --spacing-unit: 2.5rem;
+    --content-padding: 4rem;
+    --card-padding: 2.5rem;
+  }
+}
+
+/* Enhanced Navigation Drawer Responsive Styles */
+@media (min-width: 1920px) {
+  .nav-drawer-large {
+    width: 18rem; /* 288px */
+  }
+
+  .nav-drawer-large.collapsed {
+    width: 5rem; /* 80px */
+  }
+}
+
+@media (min-width: 2560px) {
+  .nav-drawer-ultra-wide {
+    width: 20rem; /* 320px */
+  }
+
+  .nav-drawer-ultra-wide.collapsed {
+    width: 6rem; /* 96px */
+  }
 }
 
 /* Print Styles */
