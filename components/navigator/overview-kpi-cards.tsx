@@ -27,24 +27,53 @@ interface KPIMetric {
 /**
  * Generate KPI data based on date range
  * Creates realistic metrics that vary based on the selected time period
+ * 
+ * @param {Date} startDate - Start date of the selected range
+ * @param {Date} endDate - End date of the selected range
+ * @returns {KPIMetric[]} Array of KPI metrics (3 or 4 items based on date range)
+ * 
+ * Business Logic:
+ * - Past dates only: Show 3 KPIs (no event card)
+ * - Future dates only: Show 4 KPIs with "Upcoming Events" card
+ * - Current/mixed dates: Show 4 KPIs with "Event Impact" card
  */
 function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
   const days = differenceInDays(endDate, startDate) + 1
-  const isLongTerm = days > 30
+  const today = new Date()
+  
+  // Normalize dates to start of day for accurate comparison
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const startDateStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+  const endDateStart = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
+  
+  // Enhanced date range detection logic
+  const isFutureRange = startDateStart > todayStart // Entire range is in the future
+  const isPastRange = endDateStart < todayStart // Entire range is in the past
+  const isCurrentRange = startDateStart <= todayStart && endDateStart >= todayStart // Range includes today
+  
+  // Comprehensive debug logging for troubleshooting
+  console.group('📅 KPI Date Analysis')
+  console.log(`Today (normalized): ${format(todayStart, 'yyyy-MM-dd')}`)
+  console.log(`Start Date: ${format(startDateStart, 'yyyy-MM-dd')}`)
+  console.log(`End Date: ${format(endDateStart, 'yyyy-MM-dd')}`)
+  console.log(`Days in range: ${days}`)
+  console.log(`Range Classification:`)
+  console.log(`  - Is Future Only: ${isFutureRange}`)
+  console.log(`  - Is Past Only: ${isPastRange}`)
+  console.log(`  - Includes Current: ${isCurrentRange}`)
+  console.groupEnd()
   
   // Base values that change based on date range
   const baseRate = 280 + (days * 0.5) + (Math.random() * 40)
   const parityBase = 90 + (days * 0.1) + (Math.random() * 8)
   const marketPos = Math.max(1, Math.min(5, Math.round(3 - (days * 0.02))))
-  const eventImpact = 100 + (days * 0.8) + (Math.random() * 30)
   
   // Previous period values (simulate comparison)
   const prevRate = baseRate * (0.95 + Math.random() * 0.1)
   const prevParity = parityBase * (0.92 + Math.random() * 0.15)
   const prevMarketPos = Math.max(1, Math.min(5, marketPos + (Math.random() > 0.5 ? 1 : -1)))
-  const prevEventImpact = eventImpact * (0.85 + Math.random() * 0.3)
   
-  return [
+  const baseKPIs = [
     {
       id: 'average-rate',
       title: 'Average Rate',
@@ -84,20 +113,97 @@ function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
       color: 'purple',
       isImportant: true,
     },
-    {
+  ]
+
+  /**
+   * Event KPI Logic - Conditional based on date range type
+   * 
+   * Business Rules:
+   * 1. Past dates only → No event card (3 KPIs total)
+   * 2. Future dates only → "Upcoming Events" card with single event name
+   * 3. Current/mixed dates → "Event Impact" percentage card
+   */
+  console.group('🎯 Event KPI Decision Logic')
+  
+  if (isPastRange) {
+    // Rule 1: Past dates only - Hide event card completely
+    console.log('✅ RULE 1: Past dates only - Hiding event KPI card')
+    console.log(`   Reason: End date (${format(endDateStart, 'yyyy-MM-dd')}) < Today (${format(todayStart, 'yyyy-MM-dd')})`)
+    // No event KPI added - baseKPIs remains with 3 items
+    
+  } else if (isFutureRange) {
+    // Rule 2: Future dates only - Show "Upcoming Events" with single event
+    console.log('✅ RULE 2: Future dates only - Adding "Upcoming Events" KPI')
+    console.log(`   Reason: Start date (${format(startDateStart, 'yyyy-MM-dd')}) > Today (${format(todayStart, 'yyyy-MM-dd')})`)
+    
+    // Predefined list of realistic future events
+    const futureEventNames = [
+      'Tech Innovation Summit',
+      'Annual Business Conference', 
+      'Wedding Season Peak',
+      'Holiday Travel Rush',
+      'Sports Championship',
+      'Music & Arts Festival',
+      'Corporate Retreat Season',
+      'International Trade Show',
+      'Food & Wine Experience',
+      'Cultural Heritage Festival'
+    ]
+    
+    // Select exactly one event for simplicity as requested
+    const selectedEventIndex = Math.floor(Math.random() * futureEventNames.length)
+    const selectedEvent = futureEventNames[selectedEventIndex]
+    const expectedImpact = 25 + Math.floor(Math.random() * 40) // 25-65% expected impact
+    
+    console.log(`   Selected Event: "${selectedEvent}"`)
+    console.log(`   Expected Impact: ${expectedImpact}%`)
+    
+    baseKPIs.push({
+      id: 'upcoming-events',
+      title: 'Upcoming Events',
+      value: 1, // Always 1 event as requested
+      previousValue: 0, // No previous events for comparison
+      change: expectedImpact,
+      changeType: 'increase' as const,
+      icon: Calendar,
+      description: `Next major event: ${selectedEvent}`,
+      format: 'number' as const,
+      color: 'amber' as const,
+      isImportant: true,
+    })
+    
+  } else if (isCurrentRange) {
+    // Rule 3: Current/mixed period - Show "Event Impact" percentage
+    console.log('✅ RULE 3: Current/mixed period - Adding "Event Impact" KPI')
+    console.log(`   Reason: Range spans across today (${format(todayStart, 'yyyy-MM-dd')})`)
+    
+    const currentEventImpact = 85 + Math.floor(Math.random() * 30) // 85-115% impact
+    const previousEventImpact = currentEventImpact * (0.85 + Math.random() * 0.3)
+    const impactChange = ((currentEventImpact - previousEventImpact) / previousEventImpact) * 100
+    
+    console.log(`   Current Impact: ${currentEventImpact.toFixed(1)}%`)
+    console.log(`   Previous Impact: ${previousEventImpact.toFixed(1)}%`)
+    console.log(`   Change: ${impactChange.toFixed(1)}%`)
+    
+    baseKPIs.push({
       id: 'event-impact',
       title: 'Event Impact',
-      value: eventImpact,
-      previousValue: prevEventImpact,
-      change: ((eventImpact - prevEventImpact) / prevEventImpact) * 100,
-      changeType: eventImpact > prevEventImpact ? 'increase' : 'decrease',
+      value: currentEventImpact,
+      previousValue: previousEventImpact,
+      change: impactChange,
+      changeType: currentEventImpact > previousEventImpact ? 'increase' as const : 'decrease' as const,
       icon: Calendar,
       description: `Revenue impact from events during selected period`,
-      format: 'percentage',
-      color: 'amber',
+      format: 'percentage' as const,
+      color: 'amber' as const,
       isImportant: true,
-    },
-  ]
+    })
+  }
+  
+  console.log(`📊 Final KPI Count: ${baseKPIs.length} cards`)
+  console.groupEnd()
+  
+  return baseKPIs as KPIMetric[]
 }
 
 /**
@@ -314,13 +420,62 @@ function KPICard({ metric }: { metric: KPIMetric }) {
  * @component
  * @version 2.0.0
  */
+/**
+ * Verification function to validate KPI logic implementation
+ * Helps with debugging and testing the event card logic
+ * 
+ * @param {KPIMetric[]} metrics - Generated KPI metrics array
+ * @param {Date} startDate - Start date of the range
+ * @param {Date} endDate - End date of the range
+ */
+function verifyKPIImplementation(metrics: KPIMetric[], startDate: Date, endDate: Date): void {
+  console.group('🔍 KPI Implementation Verification')
+  
+  const today = new Date()
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const startDateStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+  const endDateStart = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
+  
+  const hasEventCard = metrics.some(m => m.id === 'upcoming-events' || m.id === 'event-impact')
+  const eventCard = metrics.find(m => m.id === 'upcoming-events' || m.id === 'event-impact')
+  
+  console.log('📋 Verification Results:')
+  console.log(`   Total KPIs: ${metrics.length}`)
+  console.log(`   Has Event Card: ${hasEventCard}`)
+  console.log(`   Event Card Type: ${eventCard?.id || 'None'}`)
+  console.log(`   Event Card Title: ${eventCard?.title || 'N/A'}`)
+  
+  // Validation checks
+  const isPast = endDateStart < todayStart
+  const isFuture = startDateStart > todayStart
+  
+  if (isPast && hasEventCard) {
+    console.error('❌ ERROR: Past date range should not have event card')
+  } else if (isFuture && eventCard?.id !== 'upcoming-events') {
+    console.error('❌ ERROR: Future date range should have "upcoming-events" card')
+  } else if (!isPast && !isFuture && eventCard?.id !== 'event-impact') {
+    console.error('❌ ERROR: Current/mixed range should have "event-impact" card')
+  } else {
+    console.log('✅ SUCCESS: Event card logic is working correctly')
+  }
+  
+  console.groupEnd()
+}
+
 export function OverviewKpiCards() {
   // Use date context for dynamic data generation
   const { startDate, endDate, isLoading } = useDateContext()
   
   // Generate KPI data based on selected date range
   const kpiMetrics = useMemo(() => {
-    return generateKPIData(startDate, endDate)
+    const metrics = generateKPIData(startDate, endDate)
+    
+    // Verify implementation in development
+    if (process.env.NODE_ENV === 'development') {
+      verifyKPIImplementation(metrics, startDate, endDate)
+    }
+    
+    return metrics
   }, [startDate, endDate])
 
   // Calculate summary statistics for debugging
@@ -353,8 +508,8 @@ export function OverviewKpiCards() {
         </div>
       )}
 
-      {/* KPI Grid - Enhanced Spacing */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 ${isLoading ? 'opacity-50 transition-opacity' : ''}`}>
+      {/* KPI Grid - Dynamic Layout Based on Number of Cards */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${kpiMetrics.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6 lg:gap-8 ${isLoading ? 'opacity-50 transition-opacity' : ''}`}>
         {kpiMetrics.map((metric) => (
           <KPICard key={metric.id} metric={metric} />
         ))}
