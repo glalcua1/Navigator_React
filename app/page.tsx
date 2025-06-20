@@ -326,16 +326,16 @@ export default function Home() {
                 <RateTrendsChart />
               </div>
 
-              {/* Market Demand and Property Health Cards - Grouped with consistent spacing */}
+              {/* Property Health Score and Market Demand Cards - Grouped with consistent spacing */}
               <div className="space-minimal-xl">
-                {/* Market Demand Widget - Enhanced card */}
-                <div className="animate-slide-up" data-coach-mark="market-demand" style={{ animationDelay: '0.1s' }}>
-                  <MarketDemandWidget />
+                {/* Property Health Score - Enhanced card */}
+                <div className="animate-slide-up" data-coach-mark="property-health" style={{ animationDelay: '0.1s' }}>
+                  <PropertyHealthScoreWidget />
                 </div>
 
-                {/* Property Health Score - Enhanced card */}
-                <div className="animate-slide-up mt-8" data-coach-mark="property-health" style={{ animationDelay: '0.2s' }}>
-                  <PropertyHealthScoreWidget />
+                {/* Market Demand Widget - Enhanced card */}
+                <div className="animate-slide-up mt-8" data-coach-mark="market-demand" style={{ animationDelay: '0.2s' }}>
+                  <MarketDemandWidget />
                 </div>
               </div>
             </div>

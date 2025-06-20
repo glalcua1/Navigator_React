@@ -34,7 +34,7 @@ interface NavigationItem {
   description?: string
 }
 
-// Main navigation items
+// Main navigation items - Core revenue management tools
 const mainNavigationItems: NavigationItem[] = [
   {
     id: "overview",
@@ -51,11 +51,11 @@ const mainNavigationItems: NavigationItem[] = [
     description: "Rate trends and analysis"
   },
   {
-    id: "ota-rankings",
-    title: "OTA Rankings",
-    href: "/ota-rankings",
-    icon: Star,
-    description: "Online travel agent rankings"
+    id: "demand-forecast",
+    title: "Demand Forecast",
+    href: "/demand",
+    icon: BarChart3,
+    description: "Market demand forecasting"
   },
   {
     id: "parity-monitor",
@@ -65,23 +65,23 @@ const mainNavigationItems: NavigationItem[] = [
     description: "Rate parity tracking and alerts"
   },
   {
-    id: "demand-forecast",
-    title: "Demand Forecast",
-    href: "/demand",
-    icon: BarChart3,
-    description: "Market demand forecasting"
+    id: "ota-rankings",
+    title: "OTA Rankings",
+    href: "/ota-rankings",
+    icon: Star,
+    description: "Online travel agent rankings"
   },
   {
     id: "events",
-    title: "Events",
+    title: "Events Calendar",
     href: "/events-calendar",
     icon: Calendar,
     description: "Event impact and calendar management"
   }
 ]
 
-// Bottom navigation items
-const bottomNavigationItems: NavigationItem[] = [
+// Support and configuration items - Bottom section
+const supportNavigationItems: NavigationItem[] = [
   {
     id: "settings",
     title: "Settings",
@@ -123,13 +123,13 @@ export function NavigationDrawer({
         <Link key={item.id} href={item.href}>
           <div
             className={cn(
-              "nav-drawer-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 relative z-10",
-              "hover:bg-muted/50 hover:text-foreground hover:shadow-sm",
+              "nav-drawer-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 relative",
+              "hover:bg-muted/60 hover:text-foreground",
               isActive 
-                ? "bg-brand-50 text-brand-700 border border-brand-200 shadow-sm dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800 active" 
+                ? "bg-brand-50 text-brand-700 border border-brand-200/50 shadow-sm dark:bg-brand-950/50 dark:text-brand-300 dark:border-brand-800/50" 
                 : "text-muted-foreground hover:text-foreground"
             )}
-            title={isCollapsed ? item.title : undefined}
+            title={isCollapsed ? `${item.title}\n${item.description}` : undefined}
             onClick={() => console.log(`🔗 Navigation clicked: ${item.title}`)}
             data-nav-item={item.id}
           >
@@ -164,13 +164,13 @@ export function NavigationDrawer({
       isCollapsed ? "w-16" : "w-64"
     )}>
       
-      {/* Header - Simplified without text */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-        <div className="flex justify-center w-full">
-          <div className="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 shadow-sm border border-brand-200 dark:border-brand-800">
-            <Activity className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+      {/* Header - Clean and Functional */}
+      <div className="flex items-center justify-between p-3 border-b border-border bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+        {!isCollapsed && (
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground">Navigation</h2>
           </div>
-        </div>
+        )}
         
         {onToggleCollapse && (
           <Button
@@ -180,7 +180,10 @@ export function NavigationDrawer({
               console.log('🔄 Toggle navigation drawer clicked')
               onToggleCollapse()
             }}
-            className="h-8 w-8 p-0 hover:bg-muted transition-colors nav-toggle absolute right-4 dark:hover:bg-slate-800"
+            className={cn(
+              "h-8 w-8 p-0 hover:bg-muted transition-colors nav-toggle dark:hover:bg-slate-800",
+              isCollapsed ? "mx-auto" : "ml-auto"
+            )}
             data-nav-item="toggle"
           >
             {isCollapsed ? (
@@ -196,27 +199,48 @@ export function NavigationDrawer({
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 overflow-y-auto p-2 nav-drawer flex flex-col navigation-menu">
-        {/* Main Navigation Items */}
-        <div className="space-y-1 flex-1">
-          {renderNavigationItems(mainNavigationItems)}
+      <nav className="flex-1 overflow-y-auto p-3 nav-drawer flex flex-col navigation-menu">
+        {/* Main Navigation Section */}
+        <div className="flex-1">
+          {!isCollapsed && (
+            <div className="mb-3">
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2">
+                Revenue Management
+              </h3>
+            </div>
+          )}
+          <div className="space-y-1">
+            {renderNavigationItems(mainNavigationItems)}
+          </div>
         </div>
         
-        {/* Separator */}
-        <div className="my-4 border-t border-border" />
-        
-        {/* Bottom Navigation Items */}
-        <div className="space-y-1">
-          {renderNavigationItems(bottomNavigationItems)}
+        {/* Support Section */}
+        <div className="mt-auto">
+          {!isCollapsed && (
+            <div className="mb-3 pt-4 border-t border-border">
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2">
+                Support
+              </h3>
+            </div>
+          )}
+          {isCollapsed && (
+            <div className="mb-3 pt-4 border-t border-border" />
+          )}
+          <div className="space-y-1">
+            {renderNavigationItems(supportNavigationItems)}
+          </div>
         </div>
       </nav>
 
       {/* Footer */}
       {!isCollapsed && (
-        <div className="p-4 border-t border-border bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-          <div className="text-xs text-muted-foreground text-center">
-            <p className="font-medium">Rate Parity Dashboard v2.0</p>
-            <p className="mt-1 opacity-75">© 2024 Navigator Team</p>
+        <div className="p-3 border-t border-border/50 bg-muted/20">
+          <div className="text-xs text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <span className="font-medium">Navigator v2.1</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-medium">●</span>
+            </div>
+            <p className="mt-1 opacity-75">Revenue Management</p>
           </div>
         </div>
       )}

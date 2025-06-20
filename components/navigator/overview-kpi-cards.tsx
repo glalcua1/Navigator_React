@@ -110,56 +110,59 @@ function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
     },
   ]
 
-  // Always include Events card with enhanced Dubai events
-  const dubaiEvents = [
-    { name: 'Dubai Shopping Festival', impact: 45, period: 'Jan-Feb', category: 'Shopping' },
-    { name: 'Dubai Food Festival', impact: 35, period: 'Feb-Mar', category: 'Culture' },
-    { name: 'Art Dubai', impact: 30, period: 'Mar', category: 'Arts' },
-    { name: 'Dubai World Cup', impact: 60, period: 'Mar', category: 'Sports' },
-    { name: 'GITEX Technology Week', impact: 50, period: 'Oct', category: 'Business' },
-    { name: 'Dubai Airshow', impact: 55, period: 'Nov', category: 'Business' },
-    { name: 'Dubai Marathon', impact: 25, period: 'Jan', category: 'Sports' },
-    { name: 'Global Village Season', impact: 40, period: 'Oct-Apr', category: 'Entertainment' },
-    { name: 'Dubai Summer Surprises', impact: 30, period: 'Jun-Aug', category: 'Entertainment' },
-    { name: 'Dubai International Film Festival', impact: 35, period: 'Dec', category: 'Culture' },
-  ]
+  // Include Events KPI only for current and future dates (revenue managers focus on actionable events)
+  const shouldShowEventsKPI = !isPastRange
   
-  // Select event based on date for consistency
-  const eventIndex = Math.floor((startDateStart.getTime() / (1000 * 60 * 60 * 24)) % dubaiEvents.length)
-  const selectedEvent = dubaiEvents[eventIndex]
-  
-  // Determine event relevance based on date range
-  let eventStatus = 'monitoring'
-  let eventUrgency: 'low' | 'medium' | 'high' | 'critical' = 'medium'
-  
-  if (isFutureRange) {
-    eventStatus = 'upcoming'
-    eventUrgency = selectedEvent.impact > 50 ? 'high' : 'medium'
-  } else if (isCurrentRange) {
-    eventStatus = 'active'
-    eventUrgency = 'high'
-  } else {
-    eventStatus = 'completed'
-    eventUrgency = 'low'
-  }
+  if (shouldShowEventsKPI) {
+    const dubaiEvents = [
+      { name: 'Dubai Shopping Festival', impact: 45, period: 'Jan-Feb', category: 'Shopping' },
+      { name: 'Dubai Food Festival', impact: 35, period: 'Feb-Mar', category: 'Culture' },
+      { name: 'Art Dubai', impact: 30, period: 'Mar', category: 'Arts' },
+      { name: 'Dubai World Cup', impact: 60, period: 'Mar', category: 'Sports' },
+      { name: 'GITEX Technology Week', impact: 50, period: 'Oct', category: 'Business' },
+      { name: 'Dubai Airshow', impact: 55, period: 'Nov', category: 'Business' },
+      { name: 'Dubai Marathon', impact: 25, period: 'Jan', category: 'Sports' },
+      { name: 'Global Village Season', impact: 40, period: 'Oct-Apr', category: 'Entertainment' },
+      { name: 'Dubai Summer Surprises', impact: 30, period: 'Jun-Aug', category: 'Entertainment' },
+      { name: 'Dubai International Film Festival', impact: 35, period: 'Dec', category: 'Culture' },
+    ]
+    
+    // Select event based on date for consistency
+    const eventIndex = Math.floor((startDateStart.getTime() / (1000 * 60 * 60 * 24)) % dubaiEvents.length)
+    const selectedEvent = dubaiEvents[eventIndex]
+    
+    // Determine event relevance based on date range
+    let eventStatus = 'monitoring'
+    let eventUrgency: 'low' | 'medium' | 'high' | 'critical' = 'medium'
+    
+    if (isFutureRange) {
+      eventStatus = 'upcoming'
+      eventUrgency = selectedEvent.impact > 50 ? 'high' : 'medium'
+    } else if (isCurrentRange) {
+      eventStatus = 'active'
+      eventUrgency = 'high'
+    }
 
-  baseKPIs.push({
-    id: 'dubai-events',
-    title: 'Dubai Events Impact',
-    value: selectedEvent.name,
-    previousValue: 'No major events',
-    change: selectedEvent.impact,
-    changeType: 'increase',
-    icon: Calendar,
-    description: `${selectedEvent.category} event - ${eventStatus}`,
-    format: 'text',
-    color: 'amber',
-    isImportant: true,
-    gradient: 'from-amber-500 to-orange-600',
-    urgency: eventUrgency,
-  })
-  
-  console.log(`🎉 Event KPI: ${selectedEvent.name} (${selectedEvent.impact}% impact, ${eventStatus})`)
+    baseKPIs.push({
+      id: 'dubai-events',
+      title: 'Dubai Events Impact',
+      value: selectedEvent.name,
+      previousValue: 'No major events',
+      change: selectedEvent.impact,
+      changeType: 'increase',
+      icon: Calendar,
+      description: `${selectedEvent.category} event - ${eventStatus}`,
+      format: 'text',
+      color: 'amber',
+      isImportant: true,
+      gradient: 'from-amber-500 to-orange-600',
+      urgency: eventUrgency,
+    })
+    
+    console.log(`🎉 Event KPI: ${selectedEvent.name} (${selectedEvent.impact}% impact, ${eventStatus})`)
+  } else {
+    console.log(`📅 Events KPI hidden for past dates (revenue manager focus on actionable insights)`)
+  }
   
   return baseKPIs
 }
@@ -341,14 +344,16 @@ export function OverviewKpiCards() {
     return generateKPIData(startDate, endDate)
   }, [startDate, endDate])
 
-  // Enhanced verification logging
+  // Enhanced verification logging with Events KPI tracking
   useEffect(() => {
+    const hasEventsKPI = metrics.some(m => m.id === 'dubai-events')
     console.group('🔍 Enhanced KPI Verification')
     console.log(`📊 Total KPIs: ${metrics.length}`)
-    console.log(`🎉 Events Card: ${metrics.some(m => m.id === 'dubai-events') ? 'Present' : 'Missing'}`)
-    console.log(`📋 All KPIs:`, metrics.map(m => ({ id: m.id, title: m.title, urgency: m.urgency })))
+    console.log(`🎉 Events KPI: ${hasEventsKPI ? '✅ Shown (actionable)' : '❌ Hidden (past dates)'}`)
+    console.log(`📅 Date Range: ${format(startDate, 'MMM dd')} - ${format(endDate, 'MMM dd')}`)
+    console.log(`📋 Active KPIs:`, metrics.map(m => ({ id: m.id, title: m.title, urgency: m.urgency })))
     console.groupEnd()
-  }, [metrics])
+  }, [metrics, startDate, endDate])
 
   return (
     <div className="w-full space-y-4">
@@ -368,8 +373,12 @@ export function OverviewKpiCards() {
         </Badge>
       </div>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-4 xl:gap-6">
+      {/* KPI Grid - Dynamic layout based on KPI count */}
+      <div className={`grid gap-4 xl:gap-6 ${
+        metrics.length === 4 
+          ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' 
+          : 'grid-cols-1 md:grid-cols-3 xl:grid-cols-3'
+      }`}>
         {metrics.map((metric) => (
           <KPICard key={metric.id} metric={metric} />
         ))}

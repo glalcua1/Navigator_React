@@ -172,13 +172,23 @@ export function MarketDemandWidget() {
   return (
     <Card className="card-elevated animate-fade-in">
       <CardHeader className="pb-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 elevation-1">
-            <BarChart3 className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 elevation-1">
+              <BarChart3 className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+            </div>
+            <div className="space-y-0.5">
+              <CardTitle className="text-minimal-title text-foreground">Market Demand</CardTitle>
+              <p className="text-minimal-body text-muted-foreground">Current market performance indicators</p>
+            </div>
           </div>
-          <div className="space-y-0.5">
-            <CardTitle className="text-minimal-title text-foreground">Market Demand</CardTitle>
-            <p className="text-minimal-body text-muted-foreground">Current market performance indicators</p>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              Jul 2024
+            </Badge>
+            <Badge variant="secondary" className="text-xs">
+              Real-time
+            </Badge>
           </div>
         </div>
       </CardHeader>
