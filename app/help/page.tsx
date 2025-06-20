@@ -27,7 +27,10 @@ import {
   AlertCircle,
   CheckCircle,
   Play,
-  Bookmark
+  Bookmark,
+  Headphones,
+  Globe,
+  Award
 } from "lucide-react"
 import Link from "next/link"
 import { SupportTicketForm } from "@/components/navigator/support-ticket-form"
@@ -198,285 +201,333 @@ export default function HelpPage() {
     return matchesSearch && matchesCategory
   })
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Beginner": return "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300"
-      case "Intermediate": return "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300"
-      case "Advanced": return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300"
-      default: return "bg-slate-50 text-slate-700 border-slate-200"
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "video": return <Video className="w-4 h-4" />
+      case "guide": return <BookOpen className="w-4 h-4" />
+      case "article": return <FileText className="w-4 h-4" />
+      case "faq": return <HelpCircle className="w-4 h-4" />
+      default: return <FileText className="w-4 h-4" />
     }
   }
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "video": return <Video className="h-4 w-4" />
-      case "guide": return <BookOpen className="h-4 w-4" />
-      case "faq": return <HelpCircle className="h-4 w-4" />
-      default: return <FileText className="h-4 w-4" />
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case "Beginner": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+      case "Intermediate": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+      case "Advanced": return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300"
     }
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50/50 to-blue-50/30 dark:from-slate-900 dark:to-slate-800">
       
-      {/* Header Section */}
+      {/* Enhanced Header Section */}
       <section className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <div className="max-w-7xl xl:max-w-none mx-auto py-6 lg:py-8 xl:py-10">
-            <div className="text-center space-y-4 lg:space-y-6">
-              <div className="flex items-center justify-center gap-3">
-                <div className="p-3 lg:p-4 rounded-xl bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-950 dark:to-purple-950">
-                  <BookOpen className="w-8 h-8 lg:w-10 lg:h-10 text-brand-600 dark:text-brand-400" />
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8 lg:py-12">
+          <div className="max-w-7xl xl:max-w-none mx-auto">
+            <div className="text-center space-y-4">
+              <div className="flex items-center justify-center">
+                <div className="p-3 rounded-2xl bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-950 dark:to-purple-950">
+                  <HelpCircle className="w-8 h-8 lg:w-10 lg:h-10 text-brand-600 dark:text-brand-400" />
                 </div>
-                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground">Knowledge Center</h1>
               </div>
-              <p className="text-lg lg:text-xl xl:text-2xl text-muted-foreground max-w-4xl mx-auto">
-                Everything you need to master revenue management and maximize your hotel's performance
-              </p>
-              
-              {/* Search Bar */}
-              <div className="max-w-3xl mx-auto mt-6 lg:mt-8">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground" />
-                  <Input
-                    placeholder="Search articles, guides, and tutorials..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 lg:pl-12 pr-4 py-3 lg:py-4 text-base lg:text-lg"
-                  />
-                </div>
+              <div className="space-y-2">
+                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground">Help & Support Center</h1>
+                <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
+                  Find answers, tutorials, and expert guidance to maximize your revenue management success
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8 lg:py-10 xl:py-12">
-        <div className="max-w-7xl xl:max-w-none mx-auto">
-          
-          <Tabs defaultValue="knowledge" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-4">
-              <TabsTrigger value="knowledge" className="gap-2">
-                <BookOpen className="h-4 w-4" />
-                Knowledge Base
-              </TabsTrigger>
-              <TabsTrigger value="videos" className="gap-2">
-                <Video className="h-4 w-4" />
-                Video Tutorials
-              </TabsTrigger>
-              <TabsTrigger value="faq" className="gap-2">
-                <HelpCircle className="h-4 w-4" />
-                FAQ
-              </TabsTrigger>
-              <TabsTrigger value="support" className="gap-2">
-                <MessageCircle className="h-4 w-4" />
-                Get Support
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Knowledge Base Tab */}
-            <TabsContent value="knowledge" className="space-y-6">
+      {/* Enhanced Quick Stats */}
+      <section className="w-full bg-gradient-to-r from-slate-50/80 to-blue-50/60 dark:from-slate-900/80 dark:to-slate-800/60 border-b border-slate-200/50 dark:border-slate-700/50">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-6">
+          <div className="max-w-7xl xl:max-w-none mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
               
-              {/* Quick Start Section */}
-              <section>
-                <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-4 lg:mb-6">Quick Start Guides</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
-                  {knowledgeArticles.filter(article => article.category === "Getting Started").map((article) => (
-                    <Card key={article.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-2">
-                            {getTypeIcon(article.type)}
-                            <CardTitle className="text-base font-semibold group-hover:text-brand-600 transition-colors">
-                              {article.title}
-                            </CardTitle>
-                          </div>
-                          {article.new && <Badge variant="secondary" className="text-xs">New</Badge>}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground mb-3">{article.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Badge className={`text-xs ${getDifficultyColor(article.difficulty)}`}>
-                              {article.difficulty}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {article.readTime}
-                            </span>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-brand-600 transition-colors" />
-                        </div>
-                      </CardContent>
-                    </Card>
+              <Card className="card-minimal hover:shadow-lg transition-all duration-200 group">
+                <CardContent className="p-4 xl:p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/40 transition-colors">
+                      <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <span className="text-sm font-semibold text-muted-foreground">Articles</span>
+                  </div>
+                  <div className="text-2xl xl:text-3xl font-black text-foreground tracking-tight">24</div>
+                </CardContent>
+              </Card>
+
+              <Card className="card-minimal hover:shadow-lg transition-all duration-200 group">
+                <CardContent className="p-4 xl:p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/40 transition-colors">
+                      <Video className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <span className="text-sm font-semibold text-muted-foreground">Videos</span>
+                  </div>
+                  <div className="text-2xl xl:text-3xl font-black text-foreground tracking-tight">12</div>
+                </CardContent>
+              </Card>
+
+              <Card className="card-minimal hover:shadow-lg transition-all duration-200 group">
+                <CardContent className="p-4 xl:p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-900/30 group-hover:bg-amber-200 dark:group-hover:bg-amber-900/40 transition-colors">
+                      <Headphones className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <span className="text-sm font-semibold text-muted-foreground">Support</span>
+                  </div>
+                  <div className="text-2xl xl:text-3xl font-black text-foreground tracking-tight">24/7</div>
+                </CardContent>
+              </Card>
+
+              <Card className="card-minimal hover:shadow-lg transition-all duration-200 group">
+                <CardContent className="p-4 xl:p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/30 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/40 transition-colors">
+                      <Award className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <span className="text-sm font-semibold text-muted-foreground">Satisfaction</span>
+                  </div>
+                  <div className="text-2xl xl:text-3xl font-black text-foreground tracking-tight">98%</div>
+                </CardContent>
+              </Card>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-6 lg:py-8 xl:py-10">
+        <div className="max-w-7xl xl:max-w-none mx-auto space-y-6 lg:space-y-8">
+
+          {/* Enhanced Search Section */}
+          <section className="w-full">
+            <Card className="card-elevated">
+              <CardContent className="p-6 lg:p-8">
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      placeholder="Search articles, guides, and tutorials..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-12 h-12 text-base"
+                    />
+                  </div>
+                  <Button 
+                    onClick={() => setShowSupportForm(true)}
+                    className="h-12 px-6 lg:px-8 bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-700 hover:to-purple-700"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Contact Support
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Enhanced Tabs Section */}
+          <section className="w-full">
+            <Tabs defaultValue="articles" className="w-full">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                <TabsList className="grid grid-cols-4 lg:w-auto h-12">
+                  <TabsTrigger value="articles" className="text-sm font-medium">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Articles
+                  </TabsTrigger>
+                  <TabsTrigger value="videos" className="text-sm font-medium">
+                    <Video className="w-4 h-4 mr-2" />
+                    Videos
+                  </TabsTrigger>
+                  <TabsTrigger value="faq" className="text-sm font-medium">
+                    <HelpCircle className="w-4 h-4 mr-2" />
+                    FAQ
+                  </TabsTrigger>
+                  <TabsTrigger value="contact" className="text-sm font-medium">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Contact
+                  </TabsTrigger>
+                </TabsList>
+                
+                {/* Category Filter */}
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className="text-xs"
+                    >
+                      {category === "all" ? "All Categories" : category}
+                    </Button>
                   ))}
                 </div>
-              </section>
+              </div>
 
-              {/* Category Filter */}
-              <section>
-                <div className="flex items-center justify-between mb-4 lg:mb-6">
-                  <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground">All Articles</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <Button
-                        key={category}
-                        variant={selectedCategory === category ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedCategory(category)}
-                        className="text-xs"
-                      >
-                        {category === "all" ? "All Categories" : category}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Articles Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-8">
+              {/* Articles Tab */}
+              <TabsContent value="articles" className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredArticles.map((article) => (
-                    <Card key={article.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
+                    <Card key={article.id} className="card-minimal hover:shadow-lg transition-all duration-200 group cursor-pointer">
                       <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-2">
-                            {getTypeIcon(article.type)}
-                            <CardTitle className="text-lg font-semibold group-hover:text-brand-600 transition-colors">
-                              {article.title}
-                            </CardTitle>
+                            <div className="p-1.5 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950">
+                              {getTypeIcon(article.type)}
+                            </div>
+                            <Badge className={getDifficultyColor(article.difficulty)}>
+                              {article.difficulty}
+                            </Badge>
                           </div>
-                          <div className="flex items-center gap-2">
-                            {article.popular && <Star className="h-4 w-4 text-amber-500" />}
+                          <div className="flex items-center gap-1">
+                            {article.popular && <Star className="w-4 h-4 text-amber-500" />}
                             {article.new && <Badge variant="secondary" className="text-xs">New</Badge>}
                           </div>
                         </div>
+                        <CardTitle className="text-lg font-semibold text-foregroup-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                          {article.title}
+                        </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-muted-foreground mb-4">{article.description}</p>
+                      <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {article.description}
+                        </p>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Badge className={`text-xs ${getDifficultyColor(article.difficulty)}`}>
-                              {article.difficulty}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
                               {article.readTime}
-                            </span>
-                            <span className="text-xs text-muted-foreground">{article.category}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <BookOpen className="w-3 h-3" />
+                              {article.category}
+                            </div>
                           </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-brand-600 transition-colors" />
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-3">
-                          {article.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
+                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" />
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
-              </section>
-            </TabsContent>
+              </TabsContent>
 
-            {/* Video Tutorials Tab */}
-            <TabsContent value="videos" className="space-y-6 lg:space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8">
-                {videoTutorials.map((video) => (
-                  <Card key={video.id} className="card-enhanced hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                    <div className="relative">
-                      <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-t-lg flex items-center justify-center">
-                        <Play className="h-12 w-12 text-brand-600" />
-                      </div>
-                      <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                        {video.duration}
-                      </div>
-                    </div>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-semibold group-hover:text-brand-600 transition-colors">
-                        {video.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-3">{video.description}</p>
-                      <div className="flex items-center justify-between">
-                        <Badge className={`text-xs ${getDifficultyColor(video.difficulty)}`}>
-                          {video.difficulty}
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">{video.category}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* FAQ Tab */}
-            <TabsContent value="faq" className="space-y-6">
-              <div className="max-w-4xl mx-auto space-y-4">
-                {faqItems.map((faq, index) => (
-                  <Card key={index} className="card-enhanced">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-semibold flex items-center gap-2">
-                        <HelpCircle className="h-4 w-4 text-brand-600" />
-                        {faq.question}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Support Tab */}
-            <TabsContent value="support" className="space-y-6">
-              <div className="max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  
-                  {/* Support Options */}
-                  <div className="lg:col-span-1 space-y-4">
-                    <Card className="card-enhanced">
-                      <CardHeader>
-                        <CardTitle className="text-lg font-semibold">Contact Support</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-950 rounded-lg">
-                          <CheckCircle className="h-5 w-5 text-emerald-600" />
-                          <div>
-                            <div className="font-medium text-sm">Live Chat</div>
-                            <div className="text-xs text-muted-foreground">Available 24/7</div>
+              {/* Videos Tab */}
+              <TabsContent value="videos" className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {videoTutorials.map((video) => (
+                    <Card key={video.id} className="card-minimal hover:shadow-lg transition-all duration-200 group cursor-pointer">
+                      <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 rounded-t-lg relative overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="p-4 rounded-full bg-white/90 dark:bg-slate-900/90 group-hover:scale-110 transition-transform">
+                            <Play className="w-8 h-8 text-brand-600 dark:text-brand-400" />
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-                          <MessageCircle className="h-5 w-5 text-blue-600" />
-                          <div>
-                            <div className="font-medium text-sm">Email Support</div>
-                            <div className="text-xs text-muted-foreground">Response within 2 hours</div>
-                          </div>
+                        <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/80 text-white text-xs rounded">
+                          {video.duration}
                         </div>
-                        <div className="flex items-center gap-3 p-3 bg-amber-50 dark:bg-amber-950 rounded-lg">
-                          <AlertCircle className="h-5 w-5 text-amber-600" />
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Badge className={getDifficultyColor(video.difficulty)}>
+                              {video.difficulty}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {video.category}
+                            </Badge>
+                          </div>
                           <div>
-                            <div className="font-medium text-sm">Priority Support</div>
-                            <div className="text-xs text-muted-foreground">For urgent issues</div>
+                            <h3 className="font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                              {video.title}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {video.description}
+                            </p>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
-                  </div>
+                  ))}
+                </div>
+              </TabsContent>
 
-                  {/* Support Form */}
-                  <div className="lg:col-span-2">
-                    <SupportTicketForm />
+              {/* FAQ Tab */}
+              <TabsContent value="faq" className="space-y-4">
+                {faqItems.map((faq, index) => (
+                  <Card key={index} className="card-minimal">
+                    <CardContent className="p-6">
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="p-1.5 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 mt-0.5">
+                            <HelpCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-foreground mb-2">{faq.question}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </TabsContent>
+
+              {/* Contact Tab */}
+              <TabsContent value="contact">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <Card className="card-elevated">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <MessageCircle className="w-5 h-5" />
+                        Submit a Support Ticket
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <SupportTicketForm />
+                    </CardContent>
+                  </Card>
+                  
+                  <div className="space-y-6">
+                    <Card className="card-minimal">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950">
+                            <Globe className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <h3 className="font-semibold text-foreground">Global Support</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Our support team is available 24/7 across all time zones to help you succeed.
+                        </p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="card-minimal">
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950">
+                            <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                          </div>
+                          <h3 className="font-semibold text-foreground">Quick Response</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Average response time under 2 hours for critical issues, 24 hours for general inquiries.
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+            </Tabs>
+          </section>
         </div>
       </div>
     </div>

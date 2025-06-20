@@ -11,45 +11,49 @@ import { MarketDemandWidget } from "@/components/navigator/market-demand-widget"
 import { PropertyHealthScoreWidget } from "@/components/navigator/property-health-score-widget"
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { CoachMarkTrigger } from "@/components/navigator/coach-mark-system"
+import { WeeklyPricingDrawer } from "@/components/weekly-pricing-drawer"
 import { 
-  Info, 
   Activity, 
-  Compass, 
-  ChevronRight, 
-  Shield, 
   TrendingUp, 
   MapPin, 
   Clock,
-  BarChart3
+  BarChart3,
+  ArrowRight,
+  Zap,
+  Target,
+  Bell,
+  ChevronRight,
+  DollarSign
 } from "lucide-react"
 
 /**
- * Quick Actions Configuration
- * Centralized action items for the dashboard
+ * Modern Quick Actions Configuration
+ * Streamlined with better visual hierarchy and reduced clutter
  */
 const quickActions = [
   {
     id: 'rate-optimization',
     title: 'Rate Optimization',
-    subtitle: 'Optimize your pricing strategy',
+    subtitle: 'AI-powered pricing strategy',
     icon: TrendingUp,
-    color: 'blue',
+    color: 'primary',
     href: '/rate-optimization',
     badge: 'Hot',
+    urgent: true,
     action: () => {
       console.log('🎯 Navigating to Rate Optimization')
-      // In a real app, you would use Next.js router
       window.location.href = '/rate-optimization'
     }
   },
   {
     id: 'competitor-analysis',
-    title: 'Competitor Analysis',
-    subtitle: 'Compare with market leaders',
-    icon: Shield,
-    color: 'purple',
+    title: 'Market Intelligence',
+    subtitle: 'Real-time competitor insights',
+    icon: BarChart3,
+    color: 'secondary',
     href: '/competitive-analysis',
     badge: null,
+    urgent: false,
     action: () => {
       console.log('📊 Navigating to Competitor Analysis')
       window.location.href = '/competitive-analysis'
@@ -57,12 +61,13 @@ const quickActions = [
   },
   {
     id: 'location-insights',
-    title: 'Location Insights',
-    subtitle: 'Area performance metrics',
+    title: 'Location Performance',
+    subtitle: 'Geographic revenue analysis',
     icon: MapPin,
-    color: 'green',
+    color: 'accent',
     href: '/location-insights',
     badge: 'New',
+    urgent: false,
     action: () => {
       console.log('📍 Navigating to Location Insights')
       window.location.href = '/location-insights'
@@ -70,12 +75,13 @@ const quickActions = [
   },
   {
     id: 'real-time-alerts',
-    title: 'Real-time Alerts',
-    subtitle: 'Monitor critical changes',
-    icon: Clock,
-    color: 'amber',
+    title: 'Smart Alerts',
+    subtitle: 'Critical change monitoring',
+    icon: Bell,
+    color: 'warning',
     href: '/alerts',
     badge: '3',
+    urgent: true,
     action: () => {
       console.log('🔔 Navigating to Real-time Alerts')
       window.location.href = '/alerts'
@@ -84,111 +90,115 @@ const quickActions = [
 ]
 
 /**
- * Insight Items Configuration
- * Key insights and recommendations for the dashboard
+ * Streamlined Insights Configuration
+ * Focused on revenue-critical insights with better categorization
  */
 const insights = [
   {
     id: 'rate-parity-alert',
-    type: 'warning',
-    title: 'Rate Parity Issue Detected',
-    description: 'Booking.com is showing rates 8% lower than your direct channel.',
-    action: 'Review Rates',
-    importance: 'high',
+    type: 'critical',
+    title: 'Rate Parity Violation',
+    description: 'Booking.com rates 8% below direct - immediate action required',
+    action: 'Fix Now',
+    impact: 'High Revenue Impact',
+    value: '-$2,400/day',
+    urgency: 'immediate',
   },
   {
     id: 'demand-surge',
-    type: 'success',
-    title: 'Demand Surge Expected',
-    description: 'Tech conference next week will increase demand by 35%.',
-    action: 'Adjust Pricing',
-    importance: 'medium',
+    type: 'opportunity',
+    title: 'Demand Surge Detected',
+    description: 'Tech conference driving 35% demand increase next week',
+    action: 'Optimize Pricing',
+    impact: 'Revenue Opportunity',
+    value: '+$8,500/week',
+    urgency: 'high',
   },
   {
-    id: 'competitor-price-drop',
-    type: 'info',
-    title: 'Competitor Price Movement',
-    description: '3 competitors reduced rates by avg 12% for next month.',
-    action: 'Analyze Impact',
-    importance: 'medium',
-  },
-  {
-    id: 'performance-milestone',
-    type: 'success',
-    title: 'Revenue Milestone Achieved',
-    description: 'You\'ve exceeded Q1 revenue target by 8%.',
-    action: 'View Report',
-    importance: 'low',
+    id: 'competitor-movement',
+    type: 'market',
+    title: 'Market Shift Alert',
+    description: '3 key competitors reduced rates by 12% - market repositioning needed',
+    action: 'Analyze Strategy',
+    impact: 'Competitive Position',
+    value: 'Market Share Risk',
+    urgency: 'medium',
   },
 ]
 
 /**
- * Get Color Classes for Quick Actions
- * Returns appropriate styling for different color themes
+ * Enhanced Color System for Modern Design
  */
-function getActionColorClasses(color: string) {
+function getActionColorClasses(color: string, urgent: boolean = false) {
+  const baseClasses = "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+  
   const colorMap = {
-    blue: {
-      icon: 'text-brand-600 dark:text-brand-400',
-      bg: 'bg-brand-50 dark:bg-brand-950',
-      border: 'border-brand-200 dark:border-brand-800',
-      hover: 'hover:bg-brand-100 dark:hover:bg-brand-900',
+    primary: {
+      bg: urgent ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900',
+      text: urgent ? 'text-white' : 'text-blue-700 dark:text-blue-300',
+      icon: urgent ? 'text-blue-100' : 'text-blue-600 dark:text-blue-400',
+      border: 'border-blue-200 dark:border-blue-800',
+      hover: 'hover:from-blue-100 hover:to-blue-200 dark:hover:from-blue-900 dark:hover:to-blue-800',
     },
-    purple: {
+    secondary: {
+      bg: 'bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900',
+      text: 'text-purple-700 dark:text-purple-300',
       icon: 'text-purple-600 dark:text-purple-400',
-      bg: 'bg-purple-50 dark:bg-purple-950',
       border: 'border-purple-200 dark:border-purple-800',
-      hover: 'hover:bg-purple-100 dark:hover:bg-purple-900',
+      hover: 'hover:from-purple-100 hover:to-purple-200 dark:hover:from-purple-900 dark:hover:to-purple-800',
     },
-    green: {
+    accent: {
+      bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900',
+      text: 'text-emerald-700 dark:text-emerald-300',
       icon: 'text-emerald-600 dark:text-emerald-400',
-      bg: 'bg-emerald-50 dark:bg-emerald-950',
       border: 'border-emerald-200 dark:border-emerald-800',
-      hover: 'hover:bg-emerald-100 dark:hover:bg-emerald-900',
+      hover: 'hover:from-emerald-100 hover:to-emerald-200 dark:hover:from-emerald-900 dark:hover:to-emerald-800',
     },
-    amber: {
-      icon: 'text-amber-600 dark:text-amber-400',
-      bg: 'bg-amber-50 dark:bg-amber-950',
+    warning: {
+      bg: urgent ? 'bg-gradient-to-br from-amber-500 to-orange-600' : 'bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900',
+      text: urgent ? 'text-white' : 'text-amber-700 dark:text-amber-300',
+      icon: urgent ? 'text-amber-100' : 'text-amber-600 dark:text-amber-400',
       border: 'border-amber-200 dark:border-amber-800',
-      hover: 'hover:bg-amber-100 dark:hover:bg-amber-900',
+      hover: 'hover:from-amber-100 hover:to-amber-200 dark:hover:from-amber-900 dark:hover:to-amber-800',
     },
   }
-  return colorMap[color as keyof typeof colorMap] || colorMap.blue
+  
+  return colorMap[color as keyof typeof colorMap] || colorMap.primary
 }
 
 /**
- * Get Insight Styling
- * Returns appropriate styling for different insight types
+ * Modern Insight Styling
  */
 function getInsightStyling(type: string) {
   const styleMap = {
-    success: {
-      border: 'border-l-emerald-500',
-      bg: 'bg-emerald-50 dark:bg-emerald-950',
-      icon: 'text-emerald-600 dark:text-emerald-400',
-    },
-    warning: {
-      border: 'border-l-amber-500',
-      bg: 'bg-amber-50 dark:bg-amber-950',
-      icon: 'text-amber-600 dark:text-amber-400',
-    },
-    info: {
-      border: 'border-l-brand-500',
-      bg: 'bg-brand-50 dark:bg-brand-950',
-      icon: 'text-brand-600 dark:text-brand-400',
-    },
-    error: {
-      border: 'border-l-red-500',
-      bg: 'bg-red-50 dark:bg-red-950',
+    critical: {
+      bg: 'bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900',
+      accent: 'bg-red-500',
+      text: 'text-red-700 dark:text-red-300',
       icon: 'text-red-600 dark:text-red-400',
+      badge: 'bg-red-500 text-white',
+    },
+    opportunity: {
+      bg: 'bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-950 dark:to-emerald-900',
+      accent: 'bg-emerald-500',
+      text: 'text-emerald-700 dark:text-emerald-300',
+      icon: 'text-emerald-600 dark:text-emerald-400',
+      badge: 'bg-emerald-500 text-white',
+    },
+    market: {
+      bg: 'bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900',
+      accent: 'bg-blue-500',
+      text: 'text-blue-700 dark:text-blue-300',
+      icon: 'text-blue-600 dark:text-blue-400',
+      badge: 'bg-blue-500 text-white',
     },
   }
-  return styleMap[type as keyof typeof styleMap] || styleMap.info
+  return styleMap[type as keyof typeof styleMap] || styleMap.market
 }
 
 /**
- * Main Dashboard Home Page
- * Enhanced for large screens with better responsive design
+ * Modern Dashboard Home Page
+ * Optimized for revenue managers with clean, professional design
  */
 export default function Home() {
   const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false)
@@ -198,165 +208,149 @@ export default function Home() {
     console.log("🔍 Opening filter sidebar")
   }
 
-  const handleQuickActionClick = (action: typeof quickActions[0]) => {
-    console.log(`🚀 Quick action clicked: ${action.title}`)
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
-      
-      {/* Filter Bar - Edge to Edge */}
-      <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
+    <div className="min-h-screen bg-background">
+      {/* Enhanced Filter Bar with MUI Minimal styling */}
+      <div className="filter-bar-minimal">
+        <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
+      </div>
 
-      {/* Main Content Container */}
-      <div className="w-full">
-
-        {/* Welcome Section */}
-        <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm dashboard-header">
-          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-4 lg:py-6">
-            <div className="max-w-7xl xl:max-w-none mx-auto">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
-                <div className="space-y-2">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
-                    Welcome back, Hotel Manager
-                  </h1>
-                  <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-muted-foreground max-w-4xl leading-relaxed">
-                    Monitor your property performance, optimize rates, and stay ahead of the competition with real-time insights and data-driven recommendations.
-                  </p>
+      {/* Main Dashboard Content */}
+      <main className="relative">
+        <div className="px-6 sm:px-8 lg:px-10 xl:px-12 py-6 space-minimal-lg">
+          <div className="max-w-none mx-auto space-minimal-lg">
+            
+            {/* Dashboard Header with Enhanced Typography */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-minimal-md mb-8">
+              <div className="space-y-2">
+                <h1 className="text-minimal-title text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+                  Revenue Dashboard
+                </h1>
+                <p className="text-minimal-body text-lg text-muted-foreground">
+                  Real-time insights for optimal pricing and revenue performance
+                </p>
+              </div>
+              <div className="flex items-center gap-6">
+                <div data-coach-mark="weekly-pricing">
+                  <WeeklyPricingDrawer>
+                    <Button 
+                      variant="default" 
+                      size="sm" 
+                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold px-4 py-2 shadow-md hover:shadow-lg transition-all duration-200 border-0"
+                    >
+                      <DollarSign className="w-4 h-4 mr-2" />
+                      View Weekly Pricing Strategy
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </WeeklyPricingDrawer>
                 </div>
-                <div className="flex items-center gap-3 lg:flex-col lg:items-end lg:text-right">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                    <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Live</span>
+                
+                {/* Separator Line */}
+                <div className="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+                
+                <Badge className="badge-minimal bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
+                  <Activity className="w-3 h-3 mr-1" />
+                  Live Data
+                </Badge>
+                <CoachMarkTrigger />
+              </div>
+            </div>
+
+            {/* Revenue Insights - Enhanced with MUI styling */}
+            <Card className="card-elevated animate-fade-in mb-8">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/30">
+                      <Target className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                    </div>
+                    <h3 className="text-minimal-subtitle text-foreground">
+                      Revenue Insights
+                    </h3>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Last updated: {new Date().toLocaleTimeString()}
-                  </div>
+                  <Badge className="badge-minimal bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    Real-time
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-minimal-md">
+                  {insights.map((insight) => {
+                    const styling = getInsightStyling(insight.type)
+                    
+                    return (
+                      <div
+                        key={insight.id}
+                        className={`card-interactive p-6 ${styling.bg}`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={`w-1.5 h-16 rounded-full ${styling.accent} flex-shrink-0`} />
+                          <div className="flex-1 min-w-0 space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className={`text-minimal-subtitle font-semibold ${styling.text}`}>
+                                {insight.title}
+                              </h4>
+                              <Badge className={`badge-minimal ${styling.badge} text-xs`}>
+                                {insight.urgency}
+                              </Badge>
+                            </div>
+                            <p className={`text-minimal-body ${styling.text} opacity-90`}>
+                              {insight.description}
+                            </p>
+                            <div className="flex items-center justify-between pt-2">
+                              <div className={`text-sm font-bold ${styling.text}`}>
+                                {insight.value}
+                              </div>
+                              <div className={`text-xs font-medium ${styling.text} opacity-75 italic`}>
+                                Guidance: {insight.action}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* KPI Cards - Enhanced with proper spacing */}
+            <div className="w-full animate-slide-up" data-coach-mark="kpi-cards">
+              <OverviewKpiCards />
+            </div>
+
+            {/* Main Content Grid - Enhanced with consistent spacing */}
+            <div className="space-minimal-xl mt-8">
+              
+              {/* Rate Trends Chart - Full width with enhanced styling */}
+              <div className="animate-fade-in mb-12" data-coach-mark="rate-trends">
+                <RateTrendsChart />
+              </div>
+
+              {/* Market Demand and Property Health Cards - Grouped with consistent spacing */}
+              <div className="space-minimal-xl">
+                {/* Market Demand Widget - Enhanced card */}
+                <div className="animate-slide-up" data-coach-mark="market-demand" style={{ animationDelay: '0.1s' }}>
+                  <MarketDemandWidget />
+                </div>
+
+                {/* Property Health Score - Enhanced card */}
+                <div className="animate-slide-up mt-8" data-coach-mark="property-health" style={{ animationDelay: '0.2s' }}>
+                  <PropertyHealthScoreWidget />
                 </div>
               </div>
             </div>
+
+            {/* Footer spacing */}
+            <div className="h-8"></div>
           </div>
         </div>
 
-        {/* Content Sections */}
-        <div className="w-full space-y-0">
-
-          {/* Recent Insights Section */}
-          <section className="w-full bg-gradient-to-r from-slate-50/50 to-blue-50/50 dark:from-slate-900/50 dark:to-slate-800/50 py-3 lg:py-4 border-b border-slate-200/50 dark:border-slate-700/50">
-            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-              <div className="max-w-7xl xl:max-w-none mx-auto">
-                <Card className="card-enhanced bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/80">
-                  <CardContent className="p-4 lg:p-6 xl:p-8">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg lg:text-xl xl:text-2xl font-bold text-foreground flex items-center gap-2">
-                        <div className="p-1.5 rounded-lg bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">
-                          <Activity className="w-4 h-4 lg:w-5 lg:h-5 text-brand-600 dark:text-brand-400" />
-                        </div>
-                        Recent Insights
-                      </h2>
-                      <Button variant="ghost" size="sm" className="text-xs lg:text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800">
-                        View All
-                      </Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-                      {insights.slice(0, 3).map((insight, index) => {
-                        const styling = getInsightStyling(insight.type)
-                        
-                        return (
-                          <div 
-                            key={insight.id} 
-                            className={`p-3 lg:p-4 rounded-lg border-l-4 ${styling.border} ${styling.bg} transition-all duration-200 hover:shadow-sm`}
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-foreground text-sm lg:text-base mb-1">
-                                  {insight.title}
-                                </h3>
-                                <p className="text-xs lg:text-sm text-muted-foreground leading-relaxed">
-                                  {insight.description}
-                                </p>
-                              </div>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="text-xs h-6 px-2 font-medium hover:bg-white/50 dark:hover:bg-slate-800/50 shrink-0"
-                              >
-                                {insight.action}
-                              </Button>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-
-          {/* Key Performance Indicators Section */}
-          <section className="w-full bg-white dark:bg-slate-900 py-4 lg:py-6 xl:py-8 kpi-section">
-            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-              <div className="max-w-7xl xl:max-w-none mx-auto space-y-6 lg:space-y-8">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground mb-1">Key Performance Indicators</h2>
-                    <p className="text-muted-foreground text-sm lg:text-base">Monitor your property's essential metrics and performance trends</p>
-                  </div>
-                  <Button variant="outline" size="sm" className="gap-2 font-medium">
-                    <Clock className="w-4 h-4" />
-                    Last 30 Days
-                  </Button>
-                </div>
-                <OverviewKpiCards />
-              </div>
-            </div>
-          </section>
-
-          {/* Main Analytics Section */}
-          <section className="w-full bg-gradient-to-r from-blue-50/30 to-purple-50/30 dark:from-slate-800/30 dark:to-slate-900/30 py-6 lg:py-8 xl:py-10">
-            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-              <div className="max-w-7xl xl:max-w-none mx-auto space-y-6 lg:space-y-8">
-                
-                {/* Rate Trends Chart */}
-                <div className="w-full rate-trends-chart">
-                  <RateTrendsChart />
-                </div>
-
-                {/* Widgets Layout - Vertical Stack */}
-                <div className="space-y-6 lg:space-y-8">
-                  
-                  {/* Market Demand Widget */}
-                  <div className="market-demand-section">
-                    <MarketDemandWidget />
-                  </div>
-                  
-                  {/* Property Health Score Widget - Positioned Below Market Demand */}
-                  <div className="property-health-section">
-                    <PropertyHealthScoreWidget />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-
-        </div>
-      </div>
-
-      {/* Filter Sidebar */}
-      <FilterSidebar
-        isOpen={isFilterSidebarOpen}
-        onClose={() => setIsFilterSidebarOpen(false)}
-        onApply={(filters) => {
-          console.log("🔍 Filters applied:", filters)
-          setIsFilterSidebarOpen(false)
-        }}
-      />
-
-      {/* Coach Mark System */}
-      <CoachMarkTrigger />
+        {/* Enhanced Filter Sidebar */}
+        <FilterSidebar
+          isOpen={isFilterSidebarOpen}
+          onClose={() => setIsFilterSidebarOpen(false)}
+        />
+      </main>
     </div>
   )
 }

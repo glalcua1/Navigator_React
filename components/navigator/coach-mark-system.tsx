@@ -24,7 +24,7 @@ interface CoachMark {
   description: string
   target: string
   position: "top" | "bottom" | "left" | "right"
-  category: "navigation" | "data" | "actions" | "insights"
+  category: "navigation" | "data" | "actions" | "insights" | "revenue"
   priority: number
   action?: {
     type: "click" | "hover" | "scroll"
@@ -35,78 +35,91 @@ interface CoachMark {
 const coachMarks: CoachMark[] = [
   {
     id: "welcome",
-    title: "Welcome to Your Revenue Dashboard",
-    description: "This is your central hub for monitoring rates, analyzing competition, and optimizing revenue. Let's take a quick tour of the key features.",
-    target: ".dashboard-header",
+    title: "🏨 Welcome to Revenue Management Central",
+    description: "As a revenue manager, this dashboard is your command center for maximizing profitability. You'll monitor competitor pricing, identify revenue opportunities, and make data-driven pricing decisions. Let's explore the key tools that will drive your success.",
+    target: "[data-coach-mark='dashboard-overview']",
     position: "bottom",
     category: "navigation",
     priority: 1
   },
   {
-    id: "navigation",
-    title: "Navigation Menu",
-    description: "Access all dashboard sections from here. Click the menu icon to expand or collapse the navigation panel.",
-    target: ".nav-toggle",
-    position: "right",
-    category: "navigation",
+    id: "weekly-pricing",
+    title: "📊 Weekly Pricing Strategy",
+    description: "Start here every Monday! This shows your optimized pricing strategy for the week ahead, including weekend premiums, event-driven rates, and competitive positioning. Essential for weekly rate planning.",
+    target: "[data-coach-mark='weekly-pricing']",
+    position: "bottom",
+    category: "actions",
     priority: 2,
     action: {
       type: "click",
-      description: "Try clicking to expand the menu"
+      description: "Click to view this week's pricing strategy"
     }
   },
   {
-    id: "kpis",
-    title: "Key Performance Indicators",
-    description: "Monitor your hotel's core metrics at a glance. These update in real-time and show trends compared to previous periods.",
-    target: ".kpi-section",
+    id: "revenue-kpis",
+    title: "💰 Revenue Performance KPIs",
+    description: "Your daily revenue health check. Monitor ADR trends, rate parity violations, and market position. Red indicators need immediate attention - they're costing you revenue right now.",
+    target: "[data-coach-mark='kpi-cards']",
     position: "top",
     category: "data",
     priority: 3
   },
   {
-    id: "rate-trends",
-    title: "Rate Trends Analysis",
-    description: "Track your pricing performance over time. Use the filters to analyze different date ranges and compare with competitors.",
-    target: ".rate-trends-chart",
+    id: "competitor-analysis",
+    title: "🎯 Competitor Rate Intelligence",
+    description: "Your competitive advantage tool! See who's cheapest each day, identify pricing threats, and spot revenue opportunities. The tooltip shows market positioning and action recommendations.",
+    target: "[data-coach-mark='rate-trends']",
     position: "top",
-    category: "data",
+    category: "insights",
     priority: 4,
     action: {
       type: "hover",
-      description: "Hover over data points for detailed information"
+      description: "Hover over chart points to see competitive threats and opportunities"
     }
   },
   {
-    id: "market-demand",
-    title: "Market Demand Insights",
-    description: "Understand market conditions and demand patterns. This helps you make informed pricing decisions.",
-    target: ".market-demand-section",
+    id: "market-demand-intelligence",
+    title: "🌍 Market Demand Intelligence",
+    description: "Understand where your guests come from and what events drive demand. Use the map to identify source market trends and the event calendar to anticipate demand spikes for strategic pricing.",
+    target: "[data-coach-mark='market-demand']",
     position: "top",
     category: "insights",
-    priority: 5
-  },
-  {
-    id: "alerts",
-    title: "Smart Alerts",
-    description: "Stay informed about important rate changes and market movements. Click the bell icon to view all alerts.",
-    target: ".alerts-section",
-    position: "left",
-    category: "actions",
-    priority: 6,
+    priority: 5,
     action: {
       type: "click",
-      description: "Click to view your alerts"
+      description: "Explore source markets and events affecting demand"
     }
   },
   {
-    id: "help-support",
-    title: "Help & Support",
-    description: "Access our knowledge center, video tutorials, and submit support tickets. We're here to help you succeed!",
-    target: "[data-nav-item='help']",
+    id: "property-health",
+    title: "⚡ Revenue Health Diagnostics",
+    description: "Your channel performance scorecard. Identify parity violations, ranking issues, and review problems that impact conversion. Focus on 'Critical' and 'High Priority' items first.",
+    target: "[data-coach-mark='property-health']",
+    position: "top",
+    category: "actions",
+    priority: 6
+  },
+  {
+    id: "navigation-pages",
+    title: "📈 Advanced Analytics Pages",
+    description: "Access specialized tools: Demand forecasting for capacity planning, Rate Trends for historical analysis, and Help center for revenue management best practices and training materials.",
+    target: ".navigation-menu",
     position: "right",
     category: "navigation",
-    priority: 7
+    priority: 7,
+    action: {
+      type: "click",
+      description: "Explore demand forecasting and rate trend analysis"
+    }
+  },
+  {
+    id: "daily-workflow",
+    title: "🚀 Your Daily Revenue Workflow",
+    description: "Success tip: Start each day by checking KPIs → Review competitor rates → Identify pricing opportunities → Adjust rates based on demand intelligence. This dashboard gives you everything needed for optimal revenue decisions.",
+    target: "[data-coach-mark='dashboard-overview']",
+    position: "bottom",
+    category: "insights",
+    priority: 8
   }
 ]
 
@@ -244,6 +257,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
       case 'data': return <Eye className="h-4 w-4" />
       case 'actions': return <MousePointer className="h-4 w-4" />
       case 'insights': return <Lightbulb className="h-4 w-4" />
+      case 'revenue': return <Target className="h-4 w-4" />
       default: return <HelpCircle className="h-4 w-4" />
     }
   }
@@ -254,6 +268,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
       case 'data': return 'bg-green-50 text-green-700 border-green-200'
       case 'actions': return 'bg-purple-50 text-purple-700 border-purple-200'
       case 'insights': return 'bg-amber-50 text-amber-700 border-amber-200'
+      case 'revenue': return 'bg-emerald-50 text-emerald-700 border-emerald-200'
       default: return 'bg-slate-50 text-slate-700 border-slate-200'
     }
   }
@@ -265,16 +280,16 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
       {/* Overlay */}
       <div 
         ref={overlayRef}
-        className="fixed inset-0 bg-black/50 z-[999]"
+        className="fixed inset-0 bg-black/50 z-[999] pointer-events-auto"
         onClick={handleClose}
       />
 
       {/* Coach Mark Card */}
       <Card 
-        className="coach-mark-card max-w-sm shadow-2xl border-2 border-brand-200 dark:border-brand-700"
+        className="coach-mark-card max-w-sm shadow-2xl border-2 border-brand-200 dark:border-brand-700 z-[1001] pointer-events-auto relative"
         style={getPositionStyles()}
       >
-        <CardContent className="p-4">
+        <CardContent className="p-4 pointer-events-auto">
           {/* Header */}
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -290,7 +305,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
               variant="ghost"
               size="sm"
               onClick={handleClose}
-              className="h-6 w-6 p-0"
+              className="h-6 w-6 p-0 pointer-events-auto z-[1002]"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -331,14 +346,14 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
           </div>
 
           {/* Controls */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pointer-events-auto">
             <div className="flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                className="h-7 px-2"
+                className="h-7 px-2 pointer-events-auto z-[1002]"
               >
                 <ChevronLeft className="h-3 w-3" />
               </Button>
@@ -346,7 +361,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="h-7 px-2"
+                className="h-7 px-2 pointer-events-auto z-[1002]"
               >
                 {isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
               </Button>
@@ -354,7 +369,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
                 variant="ghost"
                 size="sm"
                 onClick={handleRestart}
-                className="h-7 px-2"
+                className="h-7 px-2 pointer-events-auto z-[1002]"
               >
                 <RotateCcw className="h-3 w-3" />
               </Button>
@@ -365,14 +380,14 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
                 variant="outline"
                 size="sm"
                 onClick={handleClose}
-                className="h-7 px-3 text-xs"
+                className="h-7 px-3 text-xs pointer-events-auto z-[1002]"
               >
                 Skip Tour
               </Button>
               <Button
                 size="sm"
                 onClick={handleNext}
-                className="h-7 px-3 text-xs"
+                className="h-7 px-3 text-xs pointer-events-auto z-[1002] bg-brand-600 hover:bg-brand-700"
               >
                 {currentStep === coachMarks.length - 1 ? (
                   <>
@@ -392,19 +407,20 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
       </Card>
 
       {/* Step Indicators */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[1000]">
-        <div className="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-full px-4 py-2 shadow-lg border">
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[1001] pointer-events-auto">
+        <div className="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-full px-4 py-2 shadow-lg border pointer-events-auto">
           {coachMarks.map((_, index) => (
             <button
               key={index}
               onClick={() => handleSkipToStep(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+              className={`w-2 h-2 rounded-full transition-all duration-200 pointer-events-auto hover:scale-110 ${
                 index === currentStep
                   ? 'bg-brand-600 scale-125'
                   : completedSteps.has(index)
                   ? 'bg-emerald-500'
-                  : 'bg-slate-300 dark:bg-slate-600'
+                  : 'bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500'
               }`}
+              title={`Step ${index + 1}: ${coachMarks[index].title}`}
             />
           ))}
         </div>
@@ -421,12 +437,15 @@ export function CoachMarkTrigger() {
   useEffect(() => {
     // Check if user has seen the tour before
     const hasSeenTour = localStorage.getItem('revenue-dashboard-tour-completed')
-    if (!hasSeenTour) {
+    const lastTourVersion = localStorage.getItem('revenue-dashboard-tour-version')
+    const currentTourVersion = '2.1' // Updated version for revenue managers
+    
+    if (!hasSeenTour || lastTourVersion !== currentTourVersion) {
       setIsFirstVisit(true)
-      // Auto-start tour for first-time users after a short delay
+      // Auto-start tour for first-time users or when tour is updated
       const timeout = setTimeout(() => {
         setShowCoachMarks(true)
-      }, 2000)
+      }, 3000) // Slightly longer delay to let dashboard load
       return () => clearTimeout(timeout)
     }
   }, [])
@@ -434,25 +453,42 @@ export function CoachMarkTrigger() {
   const handleCloseTour = () => {
     setShowCoachMarks(false)
     localStorage.setItem('revenue-dashboard-tour-completed', 'true')
+    localStorage.setItem('revenue-dashboard-tour-version', '2.1')
     setIsFirstVisit(false)
   }
 
   return (
     <>
-      {/* Floating Help Button */}
+      {/* Revenue Manager Tour Button */}
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setShowCoachMarks(true)}
-          className="h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-brand-600 hover:bg-brand-700"
-          size="sm"
-        >
-          <HelpCircle className="h-5 w-5" />
-        </Button>
-        
-        {/* First Visit Pulse Animation */}
-        {isFirstVisit && (
-          <div className="absolute inset-0 rounded-full bg-brand-600 animate-ping opacity-75" />
-        )}
+        <div className="relative group">
+          <Button
+            onClick={() => setShowCoachMarks(true)}
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 border-2 border-white/20"
+            size="sm"
+            title="Start Revenue Manager Tour"
+          >
+            <HelpCircle className="h-6 w-6 text-white" />
+          </Button>
+          
+          {/* Tooltip for first-time users */}
+          {isFirstVisit && (
+            <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap pointer-events-none">
+              🚀 New to revenue management? Take the tour!
+              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900"></div>
+            </div>
+          )}
+          
+          {/* First Visit Pulse Animation */}
+          {isFirstVisit && (
+            <>
+              <div className="absolute inset-0 rounded-full bg-emerald-600 animate-ping opacity-75" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-bounce flex items-center justify-center">
+                <span className="text-white text-xs font-bold">!</span>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Coach Mark System */}

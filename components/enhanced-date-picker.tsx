@@ -229,7 +229,32 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
 
   const displayDateRange = React.useMemo(() => {
     if (selectedStartDate && selectedEndDate) {
-      return `${format(selectedStartDate, "dd MMM ''yy")} - ${format(selectedEndDate, "dd MMM ''yy")}`
+      const dateRangeText = `${format(selectedStartDate, "dd MMM ''yy")} - ${format(selectedEndDate, "dd MMM ''yy")}`
+      
+      // Determine the label based on the current mode
+      const today = new Date()
+      const daysDiff = Math.round((selectedEndDate.getTime() - selectedStartDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+      
+      // Check if it matches common patterns
+      if (isSameDay(selectedEndDate, today)) {
+        if (daysDiff === 7) return `Last 7 Days • ${dateRangeText}`
+        if (daysDiff === 14) return `Last 14 Days • ${dateRangeText}`
+        if (daysDiff === 30) return `Last 30 Days • ${dateRangeText}`
+      } else if (isSameDay(selectedStartDate, today)) {
+        if (daysDiff === 30) return `Next 30 Days • ${dateRangeText}`
+        if (daysDiff === 60) return `Next 60 Days • ${dateRangeText}`
+        if (daysDiff === 90) return `Next 90 Days • ${dateRangeText}`
+      }
+      
+      // Check for current month
+      const monthStart = startOfMonth(today)
+      const monthEnd = endOfMonth(today)
+      if (isSameDay(selectedStartDate, monthStart) && isSameDay(selectedEndDate, monthEnd)) {
+        return `Current Month • ${dateRangeText}`
+      }
+      
+      // Default to just the date range for custom selections
+      return dateRangeText
     } else if (selectedStartDate) {
       return `${format(selectedStartDate, "dd MMM ''yy")} - Select end date`
     } else {
@@ -243,13 +268,13 @@ export function EnhancedDatePicker({ startDate, endDate, onChange, className }: 
         <Button
           variant="outline"
           className={cn(
-            "justify-start text-left font-normal h-9 min-w-[240px]",
+            "justify-start text-left font-semibold h-10 min-w-[280px] px-4 gap-2 shadow-sm hover:shadow-md transition-all duration-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-slate-800",
             !selectedStartDate && "text-muted-foreground",
             className
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {displayDateRange}
+          <CalendarIcon className="h-4 w-4" />
+          <span className="truncate">{displayDateRange}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

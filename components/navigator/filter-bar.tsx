@@ -148,9 +148,8 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
             {/* Left Section - Primary Filters */}
             <div className="flex items-center gap-4 flex-1 min-w-0">
               
-              {/* Date Range Picker */}
-              <div className="flex items-center gap-2 shrink-0">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
+              {/* Date Range Picker - Removed extra calendar icon */}
+              <div className="shrink-0">
                 <EnhancedDatePicker
                   startDate={startDate}
                   endDate={endDate}
@@ -162,7 +161,7 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
               <div className="hidden sm:block w-px h-6 bg-border shrink-0" />
 
               {/* Visible Filters */}
-              <div className="flex items-center gap-2 flex-wrap min-w-0">
+              <div className="flex items-center gap-3 flex-wrap min-w-0">
                 {visibleFiltersList.map((group) => {
                   const Icon = group.icon
                   const isActive = selectedFilters[group.name] !== group.defaultOption
@@ -173,38 +172,57 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                         <Button
                           variant={isActive ? "default" : "outline"}
                           size="sm"
-                          className={`h-9 gap-2 font-medium transition-all duration-200 shrink-0 ${
+                          className={`h-10 gap-2 px-4 font-medium transition-all duration-200 shrink-0 shadow-sm hover:shadow-md ${
                             isActive 
-                              ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600" 
-                              : "hover:bg-accent hover:text-accent-foreground"
+                              ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-600 shadow-blue-200/50" 
+                              : "hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700"
                           }`}
                         >
                           <Icon className="w-4 h-4" />
-                          <span className="truncate max-w-[120px]">
+                          <span className="truncate max-w-[140px] font-semibold">
                             {selectedFilters[group.name]}
                           </span>
-                          <ChevronDown className="w-3 h-3 opacity-70" />
+                          <ChevronDown className="w-4 h-4 opacity-70" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="w-56">
+                      <DropdownMenuContent align="start" className="w-64 shadow-xl border-slate-200 dark:border-slate-700">
                         {group.options?.map((option) => (
                           <DropdownMenuItem
                             key={option}
                             onSelect={() => handleFilterChange(group.name, option)}
-                            className={`cursor-pointer ${
+                            className={`cursor-pointer py-3 px-4 transition-colors ${
                               selectedFilters[group.name] === option 
-                                ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300" 
-                                : ""
+                                ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-semibold" 
+                                : "hover:bg-slate-50 dark:hover:bg-slate-800"
                             }`}
                           >
-                            <Icon className="w-4 h-4 mr-2 opacity-70" />
-                            {option}
+                            <Icon className="w-4 h-4 mr-3 opacity-70" />
+                            <span className="font-medium">{option}</span>
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   )
                 })}
+
+                {/* More Filters Button - Moved next to Primary Compset */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-10 gap-2 px-4 font-medium hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-slate-800 transition-all duration-200 relative shadow-sm hover:shadow-md border-slate-200 dark:border-slate-700"
+                  onClick={onMoreFiltersClick}
+                >
+                  <Filter className="w-4 h-4" />
+                  <span className="hidden sm:inline font-semibold">More Filters</span>
+                  <span className="sm:hidden font-semibold">Filters</span>
+                  {getActiveFilters.length > 0 && (
+                    <Badge 
+                      className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
+                    >
+                      {getActiveFilters.length}
+                    </Badge>
+                  )}
+                </Button>
               </div>
 
               {/* Active More Filters Display */}
@@ -216,21 +234,21 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                       <Badge
                         key={filter.name}
                         variant="secondary"
-                        className="h-9 px-3 gap-2 bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800 flex items-center shrink-0"
+                        className="h-9 px-3 gap-2 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 flex items-center shrink-0 shadow-sm"
                       >
                         <span className="text-xs font-medium whitespace-nowrap">
                           {filter.name}: {selectedFilters[filter.name]}
                         </span>
                         <button
                           onClick={() => handleResetFilter(filter.name)}
-                          className="hover:bg-brand-200 dark:hover:bg-brand-800 rounded-full p-0.5 transition-colors"
+                          className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
                       </Badge>
                     ))}
                     {getActiveFilters.length > 2 && (
-                      <Badge variant="outline" className="h-9 px-3 text-xs flex items-center shrink-0">
+                      <Badge variant="outline" className="h-9 px-3 text-xs flex items-center shrink-0 shadow-sm">
                         +{getActiveFilters.length - 2} more
                       </Badge>
                     )}
@@ -245,7 +263,7 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 px-4 text-muted-foreground hover:text-foreground font-medium"
+                  className="h-9 px-4 text-muted-foreground hover:text-foreground font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   onClick={() => {
                     // Reset all filters to default
                     setSelectedFilters(
@@ -257,31 +275,13 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                         {} as Record<string, string>,
                       )
                     )
-                    setDateRange({})
+                    // Date range is managed by context
                     console.log("🔄 All filters reset")
                   }}
                 >
                   Clear All
                 </Button>
               )}
-              
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 gap-2 font-medium hover:bg-accent hover:text-accent-foreground transition-all duration-200 relative"
-                onClick={onMoreFiltersClick}
-              >
-                <Filter className="w-4 h-4" />
-                <span className="hidden sm:inline">More Filters</span>
-                <span className="sm:hidden">Filters</span>
-                {getActiveFilters.length > 0 && (
-                  <Badge 
-                    className="absolute -top-2 -right-2 h-5 w-5 p-0 text-xs bg-brand-600 text-white rounded-full flex items-center justify-center"
-                  >
-                    {getActiveFilters.length}
-                  </Badge>
-                )}
-              </Button>
             </div>
           </div>
 
@@ -294,14 +294,14 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                   <Badge
                     key={filter.name}
                     variant="secondary"
-                    className="h-8 px-2 gap-1 bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-950 dark:text-brand-300 dark:border-brand-800 flex items-center"
+                    className="h-8 px-2 gap-1 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 flex items-center"
                   >
                     <span className="text-xs font-medium">
                       {filter.name}: {selectedFilters[filter.name]}
                     </span>
                     <button
                       onClick={() => handleResetFilter(filter.name)}
-                      className="hover:bg-brand-200 dark:hover:bg-brand-800 rounded-full p-0.5 transition-colors"
+                      className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="w-3 h-3" />
                     </button>

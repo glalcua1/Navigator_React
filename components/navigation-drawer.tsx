@@ -196,7 +196,7 @@ export function NavigationDrawer({
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 overflow-y-auto p-2 nav-drawer flex flex-col">
+      <nav className="flex-1 overflow-y-auto p-2 nav-drawer flex flex-col navigation-menu">
         {/* Main Navigation Items */}
         <div className="space-y-1 flex-1">
           {renderNavigationItems(mainNavigationItems)}
