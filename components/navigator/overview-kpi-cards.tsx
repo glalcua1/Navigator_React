@@ -51,15 +51,16 @@ function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
   console.log(`Days: ${days}, Future: ${isFutureRange}, Past: ${isPastRange}, Current: ${isCurrentRange}`)
   console.groupEnd()
   
-  // Enhanced base values with market realism
-  const baseRate = 280 + (days * 0.5) + (Math.random() * 40)
-  const parityBase = 92 + (days * 0.1) + (Math.random() * 6)
+  // Enhanced base values with market realism (deterministic for SSR)
+  const dateHash = startDateStart.getTime() % 1000 // Use date for deterministic "randomness"
+  const baseRate = 280 + (days * 0.5) + ((dateHash % 40))
+  const parityBase = 92 + (days * 0.1) + ((dateHash % 6))
   const marketPos = Math.max(1, Math.min(5, Math.round(3 - (days * 0.02))))
   
   // Previous period values with realistic variance
-  const prevRate = baseRate * (0.95 + Math.random() * 0.1)
-  const prevParity = parityBase * (0.92 + Math.random() * 0.15)
-  const prevMarketPos = Math.max(1, Math.min(5, marketPos + (Math.random() > 0.5 ? 1 : -1)))
+  const prevRate = baseRate * (0.95 + ((dateHash % 10) / 100))
+  const prevParity = parityBase * (0.92 + ((dateHash % 15) / 100))
+  const prevMarketPos = Math.max(1, Math.min(5, marketPos + (dateHash % 2 === 0 ? 1 : -1)))
   
   // Core revenue metrics
   const baseKPIs: KPIMetric[] = [

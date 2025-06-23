@@ -210,8 +210,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Enhanced Filter Bar with MUI Minimal styling */}
-      <div className="filter-bar-minimal">
+      {/* Enhanced Filter Bar with Sticky Positioning */}
+      <div className="sticky top-0 z-40 filter-bar-minimal bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm transition-shadow duration-200">
         <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
       </div>
 

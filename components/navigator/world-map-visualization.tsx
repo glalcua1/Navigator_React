@@ -162,8 +162,6 @@ export function WorldMapVisualization() {
                 zoom={zoom}
                 center={center}
                 onMoveEnd={(position) => setCenter(position.coordinates)}
-                disablePanning={false}
-                disableZooming={true}
               >
                 <Geographies geography={geoUrl}>
                   {({ geographies }) =>
