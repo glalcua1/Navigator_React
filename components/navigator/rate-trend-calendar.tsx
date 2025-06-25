@@ -213,7 +213,7 @@ const generateCalendarData = (startDateRange: Date, endDateRange: Date): Calenda
         month,
         year,
         currentPrice,
-        comparison: `${Math.random() > 0.5 ? '-' : '+'}${Math.floor(Math.random() * 30 + 40)}% vs. Comp`,
+        comparison: `${(date + month + year) % 2 === 0 ? '-' : '+'}${Math.floor(((date + month + year) % 30) + 40)}% vs. Comp`,
         isFuture,
         dayOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][currentDate.getDay()]
       }

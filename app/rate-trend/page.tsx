@@ -94,30 +94,31 @@ const generateKPIData = (startDate: Date, endDate: Date) => {
     console.log('🔮 Future forecast adjustments applied')
   }
   
-  // Add some randomness for realism
-  const randomFactor = (Math.random() - 0.5) * 0.2
-  console.log('🎲 Random factor applied:', randomFactor)
+  // Add deterministic variation based on date for realism
+  const dateHash = (startDate.getTime() + endDate.getTime()) % 1000
+  const randomFactor = ((dateHash / 1000) - 0.5) * 0.2
+  console.log('🎲 Deterministic factor applied:', randomFactor)
   
   const result = {
     ratePosition: {
       current: basePosition,
-      change: isHistorical ? (Math.random() > 0.6 ? 1 : 0) : (Math.random() > 0.5 ? 1 : -1),
-      trend: Math.random() > 0.6 ? 'up' : 'down'
+      change: isHistorical ? (dateHash % 10 > 6 ? 1 : 0) : (dateHash % 10 > 5 ? 1 : -1),
+      trend: dateHash % 10 > 6 ? 'up' : 'down'
     },
     rateSpread: {
       current: Math.round(baseSpread * (1 + randomFactor)),
-      change: Math.round((Math.random() - 0.5) * 8),
-      trend: Math.random() > 0.5 ? 'up' : 'down'
+      change: Math.round(((dateHash % 100) / 100 - 0.5) * 8),
+      trend: dateHash % 10 > 5 ? 'up' : 'down'
     },
     parityScore: {
       current: Math.round(baseParity * (1 + randomFactor * 0.1)),
-      change: Math.round((Math.random() - 0.5) * 6),
-      trend: Math.random() > 0.7 ? 'up' : 'down'
+      change: Math.round(((dateHash % 200) / 200 - 0.5) * 6),
+      trend: dateHash % 10 > 7 ? 'up' : 'down'
     },
     trendAccuracy: {
       current: Math.round(baseAccuracy * (1 + randomFactor * 0.05)),
-      change: Math.round((Math.random() - 0.5) * 4),
-      trend: Math.random() > 0.6 ? 'up' : 'down'
+      change: Math.round(((dateHash % 300) / 300 - 0.5) * 4),
+      trend: dateHash % 10 > 6 ? 'up' : 'down'
     },
     periodInfo: {
       daysDifference,

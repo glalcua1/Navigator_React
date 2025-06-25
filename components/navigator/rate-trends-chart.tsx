@@ -65,7 +65,7 @@ const generateRateData = (startDate: Date, endDate: Date): RateData[] => {
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
     
     // Base rates with realistic variations and seasonal trends
-    const baseRate = 280 + (Math.random() - 0.5) * 40
+    const baseRate = 280 + ((d.getTime() % 1000) / 1000 - 0.5) * 40
     const weekendMultiplier = isWeekend ? 1.15 : 1.0
     const seasonalFactor = 1 + 0.2 * Math.sin((index / days.length) * Math.PI * 2)
     
@@ -89,7 +89,7 @@ const generateRateData = (startDate: Date, endDate: Date): RateData[] => {
     
     // Dynamic pricing with realistic market variations
     const dayVariation = Math.sin(index * 0.3) * 0.15 // Daily market fluctuations
-    const randomFactor = (Math.random() - 0.5) * 0.1 // Random market noise
+          const randomFactor = ((d.getTime() % 2000) / 2000 - 0.5) * 0.1 // Deterministic market noise
     const competitionFactor = index % 7 === 0 ? 0.9 : 1.0 // Weekly promotional cycles
     
     // Base multipliers for each hotel with daily variations
@@ -121,7 +121,7 @@ const generateRateData = (startDate: Date, endDate: Date): RateData[] => {
       competitor8: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor8),
       competitor9: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor9),
       competitor10: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor10),
-      occupancy: Math.round(75 + (Math.random() - 0.5) * 30 + (events.length * 10)),
+              occupancy: Math.round(75 + ((d.getTime() % 3000) / 3000 - 0.5) * 30 + (events.length * 10)),
       events: events.length > 0 ? events : undefined,
     })
   })
