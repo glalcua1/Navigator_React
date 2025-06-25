@@ -464,11 +464,11 @@ export function CoachMarkTrigger() {
         <div className="relative group">
           <Button
             onClick={() => setShowCoachMarks(true)}
-            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 border-2 border-white/20"
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-slate-100 hover:bg-slate-200 border-2 border-slate-300 hover:border-slate-400 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600 dark:hover:border-slate-500"
             size="sm"
             title="Start Revenue Manager Tour"
           >
-            <HelpCircle className="h-6 w-6 text-white" />
+            <HelpCircle className="h-6 w-6 text-slate-600 dark:text-slate-300" />
           </Button>
           
           {/* Tooltip for first-time users */}

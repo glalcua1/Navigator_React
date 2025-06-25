@@ -368,10 +368,7 @@ export function OverviewKpiCards() {
             Real-time insights for revenue optimization
           </p>
         </div>
-        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300">
-          <Zap className="w-3 h-3 mr-1" />
-          Live
-        </Badge>
+
       </div>
 
       {/* KPI Grid - Dynamic layout based on KPI count */}

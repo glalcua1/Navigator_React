@@ -209,9 +209,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       {/* Enhanced Filter Bar with Sticky Positioning */}
-      <div className="sticky top-0 z-40 filter-bar-minimal bg-background/95 backdrop-blur-md border-b border-border/50 shadow-sm transition-shadow duration-200">
+      <div className="sticky top-0 z-40 filter-bar-minimal bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-border/50 shadow-sm transition-shadow duration-200">
         <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
       </div>
 
@@ -234,9 +234,9 @@ export default function Home() {
                 <div data-coach-mark="weekly-pricing">
                   <WeeklyPricingDrawer>
                     <Button 
-                      variant="default" 
+                      variant="outline" 
                       size="sm" 
-                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold px-4 py-2 shadow-md hover:shadow-lg transition-all duration-200 border-0"
+                      className="bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 font-semibold px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-600 dark:text-slate-200 dark:hover:text-slate-100"
                     >
                       <DollarSign className="w-4 h-4 mr-2" />
                       View Weekly Pricing Strategy
@@ -250,7 +250,7 @@ export default function Home() {
                 
                 <Badge className="badge-minimal bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
                   <Activity className="w-3 h-3 mr-1" />
-                  Live Data
+                  Live Property
                 </Badge>
                 <CoachMarkTrigger />
               </div>
@@ -261,9 +261,6 @@ export default function Home() {
               <CardContent className="p-8">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/30">
-                      <Target className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                    </div>
                     <h3 className="text-minimal-subtitle text-foreground">
                       Revenue Insights
                     </h3>

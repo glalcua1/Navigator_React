@@ -660,7 +660,6 @@ export function RateTrendsChart() {
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <CardTitle className="text-minimal-title flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-blue-600" />
               Rate Trends Analysis
             </CardTitle>
             <p className="text-minimal-body">

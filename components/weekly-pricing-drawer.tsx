@@ -44,7 +44,7 @@ interface WeeklyPricingData {
  * @returns Array of weekly pricing data starting from today
  */
 const generateWeeklyPricingData = (): WeeklyPricingData[] => {
-  console.log('💰 Generating weekly pricing data for Dubai market (starting from today)')
+  console.log('💰 Generating weekly pricing data for Dubai market (starting from tomorrow)')
   
   const today = new Date()
   const weeklyData: WeeklyPricingData[] = []
@@ -53,10 +53,10 @@ const generateWeeklyPricingData = (): WeeklyPricingData[] => {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const shortDayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
   
-  // Generate 7 days starting from today
+  // Generate 7 days starting from tomorrow
   for (let i = 0; i < 7; i++) {
     const currentDate = new Date(today)
-    currentDate.setDate(today.getDate() + i)
+    currentDate.setDate(today.getDate() + i + 1) // +1 to start from tomorrow
     
     const dayOfWeek = currentDate.getDay() // 0 = Sunday, 6 = Saturday
     const dayName = dayNames[dayOfWeek]
@@ -134,7 +134,7 @@ const generateWeeklyPricingData = (): WeeklyPricingData[] => {
       shortDay: shortDayName,
       date: currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       price: `$${adjustedPrice.toLocaleString()}`,
-      change: i === 0 ? 'Today' : change, // Mark first day as "Today"
+      change: i === 0 ? 'Tomorrow' : change, // Mark first day as "Tomorrow"
       changePercent,
       strategy,
       reasoning,
@@ -143,7 +143,7 @@ const generateWeeklyPricingData = (): WeeklyPricingData[] => {
     })
   }
 
-  console.log('✅ Weekly pricing data generated:', weeklyData.length, 'days starting from today')
+  console.log('✅ Weekly pricing data generated:', weeklyData.length, 'days starting from tomorrow')
   console.log('📅 Date range:', weeklyData[0].date, 'to', weeklyData[6].date)
   return weeklyData
 }
@@ -304,7 +304,7 @@ export function WeeklyPricingDrawer({ children }: WeeklyPricingDrawerProps) {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <Calendar className="w-5 h-5" />
-              7-Day Forward ADR Strategy (Starting Today)
+              7-Day Forward AI Powered recommendations (Starting Tomorrow)
             </h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -315,7 +315,7 @@ export function WeeklyPricingDrawer({ children }: WeeklyPricingDrawerProps) {
                   <Card 
                     key={day.day} 
                     className={`card-minimal text-center hover:shadow-md transition-all duration-200 group border-l-4 ${colors.border} ${colors.bg} ${
-                      day.change === 'Today' ? 'ring-2 ring-blue-300 dark:ring-blue-700 bg-blue-50 dark:bg-blue-950/30' : ''
+                      day.change === 'Tomorrow' ? 'ring-2 ring-blue-300 dark:ring-blue-700 bg-blue-50 dark:bg-blue-950/30' : ''
                     }`}
                   >
                     <CardContent className="p-4 space-y-3">
@@ -333,7 +333,7 @@ export function WeeklyPricingDrawer({ children }: WeeklyPricingDrawerProps) {
                           {day.price}
                         </div>
                         <Badge className={`text-xs ${
-                          day.change === 'Today' 
+                          day.change === 'Tomorrow' 
                             ? 'bg-blue-500 text-white hover:bg-blue-500' 
                             : colors.badge
                         }`}>
@@ -356,7 +356,7 @@ export function WeeklyPricingDrawer({ children }: WeeklyPricingDrawerProps) {
                             Weekend
                           </Badge>
                         )}
-                        {day.change !== 'Today' && (
+                        {day.change !== 'Tomorrow' && (
                           <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
                             Future
                           </Badge>

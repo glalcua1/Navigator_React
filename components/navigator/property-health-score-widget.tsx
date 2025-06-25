@@ -188,9 +188,6 @@ export function PropertyHealthScoreWidget() {
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 elevation-1">
-              <Shield className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-            </div>
             <div className="space-y-1">
               <CardTitle className="text-minimal-title text-foreground">Property Health Score</CardTitle>
               <p className="text-minimal-body text-muted-foreground">Channel performance and parity monitoring</p>
@@ -221,49 +218,7 @@ export function PropertyHealthScoreWidget() {
       </CardHeader>
       
       <CardContent className="space-minimal-lg">
-        {/* Revenue Manager Insights - New Section */}
-        <div className="card-minimal p-5 space-y-4 mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-l-4 border-blue-500">
-          <div className="flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <h4 className="text-minimal-subtitle font-semibold text-foreground">Revenue Manager Focus Areas</h4>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {insights.map((insight, index) => {
-              const Icon = insight.icon
-              return (
-                <div key={index} className="flex flex-col gap-3 p-4 bg-white/60 dark:bg-slate-800/60 rounded-lg border border-white/80 dark:border-slate-700/80 h-full">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${
-                      insight.type === 'critical' ? 'bg-red-100 dark:bg-red-900/30' :
-                      insight.type === 'warning' ? 'bg-amber-100 dark:bg-amber-900/30' :
-                      insight.type === 'opportunity' ? 'bg-emerald-100 dark:bg-emerald-900/30' :
-                      'bg-blue-100 dark:bg-blue-900/30'
-                    }`}>
-                      <Icon className={`w-4 h-4 ${
-                        insight.type === 'critical' ? 'text-red-600 dark:text-red-400' :
-                        insight.type === 'warning' ? 'text-amber-600 dark:text-amber-400' :
-                        insight.type === 'opportunity' ? 'text-emerald-600 dark:text-emerald-400' :
-                        'text-blue-600 dark:text-blue-400'
-                      }`} />
-                    </div>
-                    <Badge className={`badge-minimal text-xs ${
-                      insight.priority === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' :
-                      'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                    }`}>
-                      {insight.priority}
-                    </Badge>
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <h5 className="text-sm font-semibold text-foreground leading-tight">{insight.title}</h5>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{insight.description}</p>
-                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400">→ {insight.action}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+
 
         {/* Channel Cards Grid - Enhanced with MUI styling and better spacing */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

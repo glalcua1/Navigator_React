@@ -183,7 +183,7 @@ export default function RateTrendPage() {
   // Show loading state during hydration
   if (!isClient || !kpiData) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600 mx-auto"></div>
@@ -195,7 +195,7 @@ export default function RateTrendPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       
       {/* Enhanced Filter Bar with Dashboard styling */}
       <div className="filter-bar-minimal">
@@ -216,19 +216,6 @@ export default function RateTrendPage() {
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-6">
           <div className="max-w-7xl xl:max-w-none mx-auto">
             
-            {/* Period Info Header with Consistent Date Formatting */}
-            <div className="mb-4 text-center">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/60 dark:bg-slate-800/60 rounded-lg border border-slate-200/50 dark:border-slate-700/50">
-                <Calendar className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  {kpiData.periodInfo.label} Period • {kpiData.periodInfo.daysDifference} days
-                </span>
-                <Badge variant="outline" className="text-xs">
-                  {kpiData.periodInfo.formattedStartDate} - {kpiData.periodInfo.formattedEndDate}
-                </Badge>
-              </div>
-            </div>
-
             <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-6">
               
               {/* Current Rate Position */}
@@ -379,7 +366,7 @@ export default function RateTrendPage() {
           {/* Main Rate Trend Calendar */}
           <section className="w-full">
             <Card className="card-elevated animate-fade-in">
-              <CardHeader className="pb-4">
+              <CardHeader className="pb-2">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <CardTitle className="text-xl lg:text-2xl xl:text-3xl font-bold text-foreground flex items-center gap-2">
@@ -399,7 +386,7 @@ export default function RateTrendPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 lg:p-6 xl:p-8">
+              <CardContent className="p-4 lg:p-4 xl:p-6">
           <RateTrendCalendar currentView={currentView} />
               </CardContent>
             </Card>

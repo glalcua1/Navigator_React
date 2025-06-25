@@ -174,9 +174,6 @@ export function MarketDemandWidget() {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 elevation-1">
-              <BarChart3 className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-            </div>
             <div className="space-y-0.5">
               <CardTitle className="text-minimal-title text-foreground">Market Demand</CardTitle>
               <p className="text-minimal-body text-muted-foreground">Current market performance indicators</p>
@@ -184,10 +181,7 @@ export function MarketDemandWidget() {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
-              Jul 2024
-            </Badge>
-            <Badge variant="secondary" className="text-xs">
-              Real-time
+              July 2025
             </Badge>
           </div>
         </div>
@@ -195,25 +189,20 @@ export function MarketDemandWidget() {
       
       <CardContent className="space-y-6">
         
-        {/* Key Metrics Row - Optimized for 1440px */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-6">
+        {/* Key Metrics Row - Secondary metrics with moderate emphasis */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
           {/* Demand Index */}
-          <div className="card-minimal p-4 xl:p-6 space-y-3 hover:shadow-lg transition-all duration-200 group">
+          <div className="p-4 space-y-2 bg-muted/40 rounded-lg border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-900/30 group-hover:bg-cyan-200 dark:group-hover:bg-cyan-900/40 transition-colors">
-                  <TrendingUp className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-                </div>
-                <span className="text-sm font-semibold text-muted-foreground">Demand Index</span>
-              </div>
-              <div className="text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded-full">
+              <span className="text-sm font-medium text-foreground/80">Demand Index</span>
+              <div className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
                 Last 24h
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-3xl xl:text-4xl font-black text-foreground tracking-tight">70</div>
-              <div className="flex items-center gap-2">
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+              <div className="text-xl font-bold text-foreground">70</div>
+              <div className="flex items-center gap-1">
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">
                   +5%
                 </span>
                 <span className="text-xs text-muted-foreground">vs. Yesterday</span>
@@ -222,22 +211,17 @@ export function MarketDemandWidget() {
           </div>
 
           {/* Market ADR */}
-          <div className="card-minimal p-4 xl:p-6 space-y-3 hover:shadow-lg transition-all duration-200 group">
+          <div className="p-4 space-y-2 bg-muted/40 rounded-lg border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-green-100 dark:bg-green-900/30 group-hover:bg-green-200 dark:group-hover:bg-green-900/40 transition-colors">
-                  <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <span className="text-sm font-semibold text-muted-foreground">Market ADR</span>
-              </div>
-              <div className="text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded-full">
+              <span className="text-sm font-medium text-foreground/80">Market ADR</span>
+              <div className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
                 Dubai
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-3xl xl:text-4xl font-black text-foreground tracking-tight">$250</div>
-              <div className="flex items-center gap-2">
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+              <div className="text-xl font-bold text-foreground">$250</div>
+              <div className="flex items-center gap-1">
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">
                   +2.1%
                 </span>
                 <span className="text-xs text-muted-foreground">vs. Yesterday</span>
@@ -246,22 +230,17 @@ export function MarketDemandWidget() {
           </div>
 
           {/* Market RevPAR */}
-          <div className="card-minimal p-4 xl:p-6 space-y-3 hover:shadow-lg transition-all duration-200 group">
+          <div className="p-4 space-y-2 bg-muted/40 rounded-lg border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/30 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/40 transition-colors">
-                  <BarChart3 className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                </div>
-                <span className="text-sm font-semibold text-muted-foreground">Market RevPAR</span>
-              </div>
-              <div className="text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded-full">
+              <span className="text-sm font-medium text-foreground/80">Market RevPAR</span>
+              <div className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
                 Market
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-3xl xl:text-4xl font-black text-foreground tracking-tight">$180</div>
-              <div className="flex items-center gap-2">
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+              <div className="text-xl font-bold text-foreground">$180</div>
+              <div className="flex items-center gap-1">
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">
                   +3.5%
                 </span>
                 <span className="text-xs text-muted-foreground">vs. Yesterday</span>
@@ -269,23 +248,18 @@ export function MarketDemandWidget() {
             </div>
           </div>
 
-          {/* Market Occupancy - New 4th KPI */}
-          <div className="card-minimal p-4 xl:p-6 space-y-3 hover:shadow-lg transition-all duration-200 group">
+          {/* Market Occupancy */}
+          <div className="p-4 space-y-2 bg-muted/40 rounded-lg border border-border hover:bg-muted/50 transition-colors">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-orange-100 dark:bg-orange-900/30 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/40 transition-colors">
-                  <Percent className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                </div>
-                <span className="text-sm font-semibold text-muted-foreground">Market Occupancy</span>
-              </div>
-              <div className="text-xs text-muted-foreground bg-muted/30 px-2 py-1 rounded-full">
+              <span className="text-sm font-medium text-foreground/80">Market Occupancy</span>
+              <div className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
                 Current
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-3xl xl:text-4xl font-black text-foreground tracking-tight">72%</div>
-              <div className="flex items-center gap-2">
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold text-sm bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded-full">
+              <div className="text-xl font-bold text-foreground">72%</div>
+              <div className="flex items-center gap-1">
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">
                   +4.2%
                 </span>
                 <span className="text-xs text-muted-foreground">vs. Yesterday</span>
