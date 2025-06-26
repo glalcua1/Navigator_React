@@ -613,42 +613,6 @@ export function RateTrendsChart() {
     return generateRateData(startDate, endDate)
   }, [startDate, endDate])
 
-  // Show loading state if dates aren't available yet
-  if (!startDate || !endDate) {
-    return (
-      <Card className="chart-container-minimal animate-fade-in">
-        <CardHeader className="pb-4">
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <CardTitle className="text-minimal-title flex items-center gap-2">
-                Rate Trends Analysis
-              </CardTitle>
-              <p className="text-minimal-body">
-                Loading chart data...
-              </p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center">
-            <div className="text-gray-500 dark:text-gray-400">Loading...</div>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-  
-  // Filter visible channels
-  const visibleChannels = channelConfigs.filter(config => channelVisibility[config.key])
-  
-  // Filter competitor channels only for the dropdown (exclude My Hotel)
-  const competitorChannels = channelConfigs.filter(config => config.type === 'competitor')
-  const visibleCompetitors = competitorChannels.filter(config => channelVisibility[config.key])
-  
-  // Always include My Hotel line + visible competitors for chart rendering
-  const myHotelChannel = channelConfigs.find(config => config.type === 'direct')
-  const chartChannels = myHotelChannel ? [myHotelChannel, ...visibleCompetitors] : visibleCompetitors
-  
   // Handle refresh
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true)
@@ -664,6 +628,19 @@ export function RateTrendsChart() {
       [channelKey]: !prev[channelKey]
     }))
   }, [])
+  
+  const isLoading = !startDate || !endDate
+  
+  // Filter visible channels
+  const visibleChannels = channelConfigs.filter(config => channelVisibility[config.key])
+  
+  // Filter competitor channels only for the dropdown (exclude My Hotel)
+  const competitorChannels = channelConfigs.filter(config => config.type === 'competitor')
+  const visibleCompetitors = competitorChannels.filter(config => channelVisibility[config.key])
+  
+  // Always include My Hotel line + visible competitors for chart rendering
+  const myHotelChannel = channelConfigs.find(config => config.type === 'direct')
+  const chartChannels = myHotelChannel ? [myHotelChannel, ...visibleCompetitors] : visibleCompetitors
 
   const getTrendIcon = (trend: 'stable' | 'up' | 'down') => {
     switch (trend) {
@@ -691,7 +668,7 @@ export function RateTrendsChart() {
               Rate Trends Analysis
             </CardTitle>
             <p className="text-minimal-body">
-              Comprehensive rate comparison across all channels with market insights
+              {isLoading ? 'Loading chart data...' : 'Comprehensive rate comparison across all channels with market insights'}
             </p>
           </div>
           
@@ -889,82 +866,88 @@ export function RateTrendsChart() {
 
             {/* Chart Container */}
             <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                {chartType === 'line' && (
-                  <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="date" 
-                      tickFormatter={(value) => format(new Date(value), 'MMM dd')}
-                      className="text-xs"
-                    />
-                    <YAxis className="text-xs" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    {chartChannels.map((config) => (
-                      <Line
-                        key={config.key}
-                        type="monotone"
-                        dataKey={config.key}
-                        stroke={config.color}
-                        strokeWidth={config.strokeWidth}
-                        name={config.name}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 5, stroke: config.color, strokeWidth: 2 }}
+              {isLoading ? (
+                <div className="h-full bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center">
+                  <div className="text-gray-500 dark:text-gray-400">Loading chart data...</div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  {chartType === 'line' && (
+                    <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis 
+                        dataKey="date" 
+                        tickFormatter={(value) => format(new Date(value), 'MMM dd')}
+                        className="text-xs"
                       />
-                    ))}
-                  </LineChart>
-                )}
-                
-                {chartType === 'area' && (
-                  <AreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="date" 
-                      tickFormatter={(value) => format(new Date(value), 'MMM dd')}
-                      className="text-xs"
-                    />
-                    <YAxis className="text-xs" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    {chartChannels.map((config) => (
-                      <Area
-                        key={config.key}
-                        type="monotone"
-                        dataKey={config.key}
-                        stroke={config.color}
-                        fill={config.color}
-                        fillOpacity={0.1}
-                        strokeWidth={config.strokeWidth}
-                        name={config.name}
+                      <YAxis className="text-xs" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      {chartChannels.map((config) => (
+                        <Line
+                          key={config.key}
+                          type="monotone"
+                          dataKey={config.key}
+                          stroke={config.color}
+                          strokeWidth={config.strokeWidth}
+                          name={config.name}
+                          dot={{ r: 3 }}
+                          activeDot={{ r: 5, stroke: config.color, strokeWidth: 2 }}
+                        />
+                      ))}
+                    </LineChart>
+                  )}
+                  
+                  {chartType === 'area' && (
+                    <AreaChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis 
+                        dataKey="date" 
+                        tickFormatter={(value) => format(new Date(value), 'MMM dd')}
+                        className="text-xs"
                       />
-                    ))}
-                  </AreaChart>
-                )}
-                
-                {chartType === 'bar' && (
-                  <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="date" 
-                      tickFormatter={(value) => format(new Date(value), 'MMM dd')}
-                      className="text-xs"
-                    />
-                    <YAxis className="text-xs" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    {chartChannels.slice(0, 4).map((config) => ( // Show My Hotel + up to 3 competitors
-                      <Bar
-                        key={config.key}
-                        dataKey={config.key}
-                        fill={config.color}
-                        name={config.name}
-                        opacity={0.8}
+                      <YAxis className="text-xs" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      {chartChannels.map((config) => (
+                        <Area
+                          key={config.key}
+                          type="monotone"
+                          dataKey={config.key}
+                          stroke={config.color}
+                          fill={config.color}
+                          fillOpacity={0.1}
+                          strokeWidth={config.strokeWidth}
+                          name={config.name}
+                        />
+                      ))}
+                    </AreaChart>
+                  )}
+                  
+                  {chartType === 'bar' && (
+                    <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                      <XAxis 
+                        dataKey="date" 
+                        tickFormatter={(value) => format(new Date(value), 'MMM dd')}
+                        className="text-xs"
                       />
-                    ))}
-                  </BarChart>
-                )}
-              </ResponsiveContainer>
+                      <YAxis className="text-xs" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      {chartChannels.slice(0, 4).map((config) => ( // Show My Hotel + up to 3 competitors
+                        <Bar
+                          key={config.key}
+                          dataKey={config.key}
+                          fill={config.color}
+                          name={config.name}
+                          opacity={0.8}
+                        />
+                      ))}
+                    </BarChart>
+                  )}
+                </ResponsiveContainer>
+              )}
             </div>
           </TabsContent>
 

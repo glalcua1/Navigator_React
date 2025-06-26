@@ -31,7 +31,10 @@ interface KPIMetric {
  * Generate KPI data with always-included Events card
  * Enhanced for revenue managers with focus on actionable insights
  */
-function generateKPIData(startDate: Date, endDate: Date): KPIMetric[] {
+function generateKPIData(startDate: Date | null, endDate: Date | null): KPIMetric[] {
+  // Return empty array if dates are null
+  if (!startDate || !endDate) return []
+  
   const days = differenceInDays(endDate, startDate) + 1
   const today = new Date()
   
@@ -360,32 +363,8 @@ export function OverviewKpiCards() {
     console.groupEnd()
   }, [metrics, startDate, endDate])
 
-  // Show loading state if dates aren't loaded yet
-  if (!startDate || !endDate) {
-    return (
-      <div className="w-full space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              Performance Metrics
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Loading insights...
-            </p>
-          </div>
-        </div>
-        <div className="grid gap-4 xl:gap-6 grid-cols-1 md:grid-cols-3 xl:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="kpi-card-minimal animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    )
-  }
+  // Render loading state or actual content based on data availability
+  const isLoading = !startDate || !endDate
 
   return (
     <div className="w-full space-y-4">
@@ -396,22 +375,33 @@ export function OverviewKpiCards() {
             Performance Metrics
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Real-time insights for revenue optimization
+            {isLoading ? 'Loading insights...' : 'Real-time insights for revenue optimization'}
           </p>
         </div>
-
       </div>
 
-      {/* KPI Grid - Dynamic layout based on KPI count */}
-      <div className={`grid gap-4 xl:gap-6 ${
-        metrics.length === 4 
-          ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' 
-          : 'grid-cols-1 md:grid-cols-3 xl:grid-cols-3'
-      }`}>
-        {metrics.map((metric) => (
-          <KPICard key={metric.id} metric={metric} />
-        ))}
-      </div>
+      {/* KPI Grid - Show loading or actual content */}
+      {isLoading ? (
+        <div className="grid gap-4 xl:gap-6 grid-cols-1 md:grid-cols-3 xl:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="kpi-card-minimal animate-pulse">
+              <CardContent className="p-6">
+                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className={`grid gap-4 xl:gap-6 ${
+          metrics.length === 4 
+            ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' 
+            : 'grid-cols-1 md:grid-cols-3 xl:grid-cols-3'
+        }`}>
+          {metrics.map((metric) => (
+            <KPICard key={metric.id} metric={metric} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
