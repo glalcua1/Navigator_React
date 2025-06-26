@@ -6,7 +6,7 @@ import { FilterSidebar } from "@/components/filter-sidebar"
 import { LayoutContent } from "@/components/layout-content"
 import { ThemeProvider } from "@/components/theme-provider"
 import { DateProvider } from "@/components/date-context"
-import ErrorBoundary from "@/components/error-boundary"
+import SimpleErrorBoundary from "@/components/simple-error-boundary"
 
 /**
  * Root Layout Metadata
@@ -33,7 +33,7 @@ export const viewport = {
  * Root Layout Component
  * 
  * Enhanced with comprehensive error handling and clean, professional layout structure:
- * - Comprehensive error boundary for graceful error handling
+ * - Simple error boundary for graceful error handling
  * - Theme provider for dark/light mode switching
  * - Navigation drawer integration
  * - Proper header integration
@@ -44,7 +44,7 @@ export const viewport = {
  * - Production-ready error recovery
  * 
  * @component
- * @version 2.1.0
+ * @version 2.2.0
  */
 export default function RootLayout({
   children,
@@ -63,7 +63,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased font-sans bg-background text-foreground">
-        <ErrorBoundary>
+        <SimpleErrorBoundary>
           <ThemeProvider
             attribute="class"
             defaultTheme="light"
@@ -71,16 +71,16 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <DateProvider>
-              <ErrorBoundary>
+              <SimpleErrorBoundary>
                 {/* Fixed Header - Appears on all pages */}
                 <Header />
-              </ErrorBoundary>
-              <ErrorBoundary>
+              </SimpleErrorBoundary>
+              <SimpleErrorBoundary>
                 <LayoutContent>{children}</LayoutContent>
-              </ErrorBoundary>
+              </SimpleErrorBoundary>
             </DateProvider>
           </ThemeProvider>
-        </ErrorBoundary>
+        </SimpleErrorBoundary>
       </body>
     </html>
   )
