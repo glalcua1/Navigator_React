@@ -443,18 +443,14 @@ export function CoachMarkTrigger() {
     // Only run on client side to avoid SSR issues
     if (typeof window === 'undefined') return
     
-    // Check if user has seen the tour before
+    // Check if user has seen the tour before (for UI indication only)
     const hasSeenTour = localStorage.getItem('revenue-dashboard-tour-completed')
     const lastTourVersion = localStorage.getItem('revenue-dashboard-tour-version')
     const currentTourVersion = '2.1' // Updated version for revenue managers
     
     if (!hasSeenTour || lastTourVersion !== currentTourVersion) {
       setIsFirstVisit(true)
-      // Auto-start tour for first-time users or when tour is updated
-      const timeout = setTimeout(() => {
-        setShowCoachMarks(true)
-      }, 3000) // Slightly longer delay to let dashboard load
-      return () => clearTimeout(timeout)
+      // Note: Removed auto-start functionality - users must manually click the tour button
     }
   }, [])
 

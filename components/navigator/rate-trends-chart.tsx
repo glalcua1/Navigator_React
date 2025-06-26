@@ -607,8 +607,36 @@ export function RateTrendsChart() {
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  // Generate data
-  const data = useMemo(() => generateRateData(startDate, endDate), [startDate, endDate])
+  // Generate data - only if dates are available
+  const data = useMemo(() => {
+    if (!startDate || !endDate) return []
+    return generateRateData(startDate, endDate)
+  }, [startDate, endDate])
+
+  // Show loading state if dates aren't available yet
+  if (!startDate || !endDate) {
+    return (
+      <Card className="chart-container-minimal animate-fade-in">
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <CardTitle className="text-minimal-title flex items-center gap-2">
+                Rate Trends Analysis
+              </CardTitle>
+              <p className="text-minimal-body">
+                Loading chart data...
+              </p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-96 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse flex items-center justify-center">
+            <div className="text-gray-500 dark:text-gray-400">Loading...</div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
   
   // Filter visible channels
   const visibleChannels = channelConfigs.filter(config => channelVisibility[config.key])

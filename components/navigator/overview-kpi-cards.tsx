@@ -342,11 +342,15 @@ export function OverviewKpiCards() {
   const { startDate, endDate } = useDateContext()
   
   const metrics = useMemo(() => {
+    // Return empty array if dates aren't loaded yet to prevent hydration issues
+    if (!startDate || !endDate) return []
     return generateKPIData(startDate, endDate)
   }, [startDate, endDate])
 
   // Enhanced verification logging with Events KPI tracking
   useEffect(() => {
+    if (!startDate || !endDate || metrics.length === 0) return
+    
     const hasEventsKPI = metrics.some(m => m.id === 'dubai-events')
     console.group('🔍 Enhanced KPI Verification')
     console.log(`📊 Total KPIs: ${metrics.length}`)
@@ -355,6 +359,33 @@ export function OverviewKpiCards() {
     console.log(`📋 Active KPIs:`, metrics.map(m => ({ id: m.id, title: m.title, urgency: m.urgency })))
     console.groupEnd()
   }, [metrics, startDate, endDate])
+
+  // Show loading state if dates aren't loaded yet
+  if (!startDate || !endDate) {
+    return (
+      <div className="w-full space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Performance Metrics
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Loading insights...
+            </p>
+          </div>
+        </div>
+        <div className="grid gap-4 xl:gap-6 grid-cols-1 md:grid-cols-3 xl:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="kpi-card-minimal animate-pulse">
+              <CardContent className="p-6">
+                <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full space-y-4">
