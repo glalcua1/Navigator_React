@@ -42,7 +42,9 @@ const quickActions = [
     urgent: true,
     action: () => {
       console.log('🎯 Navigating to Rate Optimization')
-      window.location.href = '/rate-optimization'
+      if (typeof window !== 'undefined') {
+        window.location.href = '/rate-optimization'
+      }
     }
   },
   {
@@ -56,7 +58,9 @@ const quickActions = [
     urgent: false,
     action: () => {
       console.log('📊 Navigating to Competitor Analysis')
-      window.location.href = '/competitive-analysis'
+      if (typeof window !== 'undefined') {
+        window.location.href = '/competitive-analysis'
+      }
     }
   },
   {
@@ -70,7 +74,9 @@ const quickActions = [
     urgent: false,
     action: () => {
       console.log('📍 Navigating to Location Insights')
-      window.location.href = '/location-insights'
+      if (typeof window !== 'undefined') {
+        window.location.href = '/location-insights'
+      }
     }
   },
   {
@@ -84,7 +90,9 @@ const quickActions = [
     urgent: true,
     action: () => {
       console.log('🔔 Navigating to Real-time Alerts')
-      window.location.href = '/alerts'
+      if (typeof window !== 'undefined') {
+        window.location.href = '/alerts'
+      }
     }
   },
 ]

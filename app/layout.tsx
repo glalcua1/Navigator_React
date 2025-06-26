@@ -6,6 +6,7 @@ import { FilterSidebar } from "@/components/filter-sidebar"
 import { LayoutContent } from "@/components/layout-content"
 import { ThemeProvider } from "@/components/theme-provider"
 import { DateProvider } from "@/components/date-context"
+import ErrorBoundary from "@/components/error-boundary"
 
 /**
  * Root Layout Metadata
@@ -60,18 +61,20 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased font-sans bg-background text-foreground">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <DateProvider>
-            {/* Fixed Header - Appears on all pages */}
-            <Header />
-            <LayoutContent>{children}</LayoutContent>
-          </DateProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <DateProvider>
+              {/* Fixed Header - Appears on all pages */}
+              <Header />
+              <LayoutContent>{children}</LayoutContent>
+            </DateProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )
