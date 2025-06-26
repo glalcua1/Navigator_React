@@ -233,7 +233,11 @@ export function SupportTicketForm() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => document.getElementById('file-upload')?.click()}
+                  onClick={() => {
+                if (typeof window !== 'undefined') {
+                  document.getElementById('file-upload')?.click()
+                }
+              }}
                 >
                   <Paperclip className="h-4 w-4 mr-2" />
                   Choose Files

@@ -141,6 +141,7 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
     if (!isVisible || !currentCoachMark) return
 
     const findTarget = () => {
+      if (typeof window === 'undefined') return null
       const element = document.querySelector(currentCoachMark.target) as HTMLElement
       if (element) {
         setTargetElement(element)
@@ -160,9 +161,11 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
     return () => {
       clearTimeout(timeout)
       // Remove highlight from all elements
-      document.querySelectorAll('.coach-mark-highlight').forEach(el => {
-        el.classList.remove('coach-mark-highlight')
-      })
+      if (typeof window !== 'undefined') {
+        document.querySelectorAll('.coach-mark-highlight').forEach(el => {
+          el.classList.remove('coach-mark-highlight')
+        })
+      }
     }
   }, [currentStep, isVisible, currentCoachMark])
 
@@ -201,9 +204,11 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
 
   const handleClose = () => {
     setIsPlaying(false)
-    document.querySelectorAll('.coach-mark-highlight').forEach(el => {
-      el.classList.remove('coach-mark-highlight')
-    })
+    if (typeof window !== 'undefined') {
+      document.querySelectorAll('.coach-mark-highlight').forEach(el => {
+        el.classList.remove('coach-mark-highlight')
+      })
+    }
     onClose()
   }
 
@@ -217,8 +222,8 @@ export function CoachMarkSystem({ isVisible, onClose }: CoachMarkSystemProps) {
     if (!targetElement) return {}
 
     const rect = targetElement.getBoundingClientRect()
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    const scrollTop = (typeof window !== 'undefined') ? (window.pageYOffset || document.documentElement.scrollTop) : 0
+    const scrollLeft = (typeof window !== 'undefined') ? (window.pageXOffset || document.documentElement.scrollLeft) : 0
 
     const styles: React.CSSProperties = {
       position: 'absolute',
@@ -435,6 +440,9 @@ export function CoachMarkTrigger() {
   const [isFirstVisit, setIsFirstVisit] = useState(false)
 
   useEffect(() => {
+    // Only run on client side to avoid SSR issues
+    if (typeof window === 'undefined') return
+    
     // Check if user has seen the tour before
     const hasSeenTour = localStorage.getItem('revenue-dashboard-tour-completed')
     const lastTourVersion = localStorage.getItem('revenue-dashboard-tour-version')
@@ -452,8 +460,10 @@ export function CoachMarkTrigger() {
 
   const handleCloseTour = () => {
     setShowCoachMarks(false)
-    localStorage.setItem('revenue-dashboard-tour-completed', 'true')
-    localStorage.setItem('revenue-dashboard-tour-version', '2.1')
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('revenue-dashboard-tour-completed', 'true')
+      localStorage.setItem('revenue-dashboard-tour-version', '2.1')
+    }
     setIsFirstVisit(false)
   }
 
