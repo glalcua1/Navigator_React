@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import { subDays } from 'date-fns'
 
 interface DateContextType {
@@ -13,9 +13,13 @@ interface DateContextType {
 const DateContext = createContext<DateContextType | undefined>(undefined)
 
 export function DateProvider({ children }: { children: React.ReactNode }) {
-  // Provide default values immediately to prevent hydration issues
-  const [startDate, setStartDate] = useState<Date>(subDays(new Date(), 29))
-  const [endDate, setEndDate] = useState<Date>(new Date())
+  const [startDate, setStartDate] = useState<Date>(() => {
+    // Initialize with last 30 days
+    return subDays(new Date(), 29)
+  })
+  const [endDate, setEndDate] = useState<Date>(() => {
+    return new Date()
+  })
   const [isLoading, setIsLoading] = useState(false)
 
   const setDateRange = (newStartDate: Date, newEndDate: Date) => {

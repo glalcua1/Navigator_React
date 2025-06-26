@@ -6,7 +6,6 @@ import { FilterSidebar } from "@/components/filter-sidebar"
 import { LayoutContent } from "@/components/layout-content"
 import { ThemeProvider } from "@/components/theme-provider"
 import { DateProvider } from "@/components/date-context"
-import SimpleErrorBoundary from "@/components/simple-error-boundary"
 
 /**
  * Root Layout Metadata
@@ -32,8 +31,7 @@ export const viewport = {
 /**
  * Root Layout Component
  * 
- * Enhanced with comprehensive error handling and clean, professional layout structure:
- * - Simple error boundary for graceful error handling
+ * Clean, professional layout structure with:
  * - Theme provider for dark/light mode switching
  * - Navigation drawer integration
  * - Proper header integration
@@ -41,10 +39,9 @@ export const viewport = {
  * - Responsive design foundation
  * - Optimized font loading
  * - Professional spacing system
- * - Production-ready error recovery
  * 
  * @component
- * @version 2.2.0
+ * @version 2.0.0
  */
 export default function RootLayout({
   children,
@@ -63,24 +60,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased font-sans bg-background text-foreground">
-        <SimpleErrorBoundary>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <DateProvider>
-              <SimpleErrorBoundary>
-                {/* Fixed Header - Appears on all pages */}
-                <Header />
-              </SimpleErrorBoundary>
-              <SimpleErrorBoundary>
-                <LayoutContent>{children}</LayoutContent>
-              </SimpleErrorBoundary>
-            </DateProvider>
-          </ThemeProvider>
-        </SimpleErrorBoundary>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <DateProvider>
+            {/* Fixed Header - Appears on all pages */}
+            <Header />
+            <LayoutContent>{children}</LayoutContent>
+          </DateProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

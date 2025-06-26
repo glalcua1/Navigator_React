@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, Suspense } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,7 +12,6 @@ import { PropertyHealthScoreWidget } from "@/components/navigator/property-healt
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { CoachMarkTrigger } from "@/components/navigator/coach-mark-system"
 import { WeeklyPricingDrawer } from "@/components/weekly-pricing-drawer"
-import SimpleErrorBoundary from "@/components/simple-error-boundary"
 import { 
   Activity, 
   TrendingUp, 
@@ -197,154 +196,158 @@ function getInsightStyling(type: string) {
   return styleMap[type as keyof typeof styleMap] || styleMap.market
 }
 
-// Loading component
-function LoadingFallback() {
-  return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
-      <div className="animate-pulse space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-1/4"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded"></div>
-          ))}
-        </div>
-        <div className="h-96 bg-gray-200 rounded"></div>
-      </div>
-    </div>
-  )
-}
-
 /**
- * Main Dashboard Page Component
- * 
- * Professional revenue management dashboard with:
- * - Real-time KPI monitoring
- * - Interactive rate trends analysis
- * - Market demand intelligence
- * - Property health diagnostics
- * - Coach mark guided tour system
- * - Advanced filtering capabilities
- * - Responsive design for all devices
- * 
- * @component
- * @version 2.2.0
+ * Modern Dashboard Home Page
+ * Optimized for revenue managers with clean, professional design
  */
-export default function DashboardPage() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+export default function Home() {
+  const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false)
 
-  try {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950" data-coach-mark="dashboard-overview">
-        <SimpleErrorBoundary>
-          <Suspense fallback={<LoadingFallback />}>
-            {/* Filter Sidebar */}
-            <FilterSidebar 
-              isOpen={isSidebarOpen} 
-              onClose={() => setIsSidebarOpen(false)} 
-            />
+  const handleMoreFiltersClick = () => {
+    setIsFilterSidebarOpen(true)
+    console.log("🔍 Opening filter sidebar")
+  }
 
-            {/* Main Content */}
-            <div className="space-y-6 p-6">
-              {/* Header Section */}
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Revenue Dashboard
-                    </h1>
-                    <Badge 
-                      variant="secondary" 
-                      className="bg-emerald-100 text-emerald-800 border-emerald-200 px-2 py-1 text-xs font-medium"
-                    >
-                      <Activity className="w-3 h-3 mr-1" />
-                      Live Property
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Monitor performance, analyze trends, and optimize revenue strategies
-                  </p>
-                </div>
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      {/* Enhanced Filter Bar with Sticky Positioning */}
+      <div className="sticky top-0 z-40 filter-bar-minimal bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-border/50 shadow-sm transition-shadow duration-200">
+        <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
+      </div>
 
-                <div className="flex items-center gap-3">
+      {/* Main Dashboard Content */}
+      <main className="relative">
+        <div className="px-6 sm:px-8 lg:px-10 xl:px-12 py-6 space-minimal-lg">
+          <div className="max-w-none mx-auto space-minimal-lg">
+            
+            {/* Dashboard Header with Enhanced Typography */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-minimal-md mb-8">
+              <div className="space-y-2">
+                <h1 className="text-minimal-title text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+                  Revenue Dashboard
+                </h1>
+                <p className="text-minimal-body text-lg text-muted-foreground">
+                  Real-time insights for optimal pricing and revenue performance
+                </p>
+              </div>
+              <div className="flex items-center gap-6">
+                <div data-coach-mark="weekly-pricing">
                   <WeeklyPricingDrawer>
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
+                      size="sm" 
+                      className="bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 font-semibold px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-600 dark:text-slate-200 dark:hover:text-slate-100"
                     >
                       <DollarSign className="w-4 h-4 mr-2" />
                       View Weekly Pricing Strategy
+                      <ChevronRight className="w-4 h-4 ml-2" />
                     </Button>
                   </WeeklyPricingDrawer>
-                  
-                  <CoachMarkTrigger>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
-                    >
-                      <Target className="w-4 h-4 mr-2" />
-                      Start Revenue Manager Tour
-                    </Button>
-                  </CoachMarkTrigger>
                 </div>
+                
+                {/* Separator Line */}
+                <div className="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+                
+                <Badge className="badge-minimal bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
+                  <Activity className="w-3 h-3 mr-1" />
+                  Live Property
+                </Badge>
+                <CoachMarkTrigger />
+              </div>
+            </div>
+
+            {/* Revenue Insights - Enhanced with MUI styling */}
+            <Card className="card-elevated animate-fade-in mb-8">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-minimal-subtitle text-foreground">
+                      Revenue Insights
+                    </h3>
+                  </div>
+                  <Badge className="badge-minimal bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    Real-time
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-minimal-md">
+                  {insights.map((insight) => {
+                    const styling = getInsightStyling(insight.type)
+                    
+                    return (
+                      <div
+                        key={insight.id}
+                        className={`card-interactive p-6 ${styling.bg}`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={`w-1.5 h-16 rounded-full ${styling.accent} flex-shrink-0`} />
+                          <div className="flex-1 min-w-0 space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className={`text-minimal-subtitle font-semibold ${styling.text}`}>
+                                {insight.title}
+                              </h4>
+                              <Badge className={`badge-minimal ${styling.badge} text-xs`}>
+                                {insight.urgency}
+                              </Badge>
+                            </div>
+                            <p className={`text-minimal-body ${styling.text} opacity-90`}>
+                              {insight.description}
+                            </p>
+                            <div className="flex items-center justify-between pt-2">
+                              <div className={`text-sm font-bold ${styling.text}`}>
+                                {insight.value}
+                              </div>
+                              <div className={`text-xs font-medium ${styling.text} opacity-75 italic`}>
+                                Guidance: {insight.action}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* KPI Cards - Enhanced with proper spacing */}
+            <div className="w-full animate-slide-up" data-coach-mark="kpi-cards">
+              <OverviewKpiCards />
+            </div>
+
+            {/* Main Content Grid - Enhanced with consistent spacing */}
+            <div className="space-minimal-xl mt-8">
+              
+              {/* Rate Trends Chart - Full width with enhanced styling */}
+              <div className="animate-fade-in mb-12" data-coach-mark="rate-trends">
+                <RateTrendsChart />
               </div>
 
-              {/* Filter Bar */}
-              <SimpleErrorBoundary>
-                <FilterBar onOpenSidebar={() => setIsSidebarOpen(true)} />
-              </SimpleErrorBoundary>
-
-              {/* KPI Cards Section */}
-              <SimpleErrorBoundary>
-                <OverviewKpiCards />
-              </SimpleErrorBoundary>
-
-              {/* Main Analytics Grid */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                {/* Rate Trends Chart - Takes up 2 columns */}
-                <div className="xl:col-span-2">
-                  <SimpleErrorBoundary>
-                    <RateTrendsChart />
-                  </SimpleErrorBoundary>
+              {/* Property Health Score and Market Demand Cards - Grouped with consistent spacing */}
+              <div className="space-minimal-xl">
+                {/* Property Health Score - Enhanced card */}
+                <div className="animate-slide-up" data-coach-mark="property-health" style={{ animationDelay: '0.1s' }}>
+                  <PropertyHealthScoreWidget />
                 </div>
 
-                {/* Market Demand Widget */}
-                <div className="space-y-6">
-                  <SimpleErrorBoundary>
-                    <MarketDemandWidget />
-                  </SimpleErrorBoundary>
-
-                  <SimpleErrorBoundary>
-                    <PropertyHealthScoreWidget />
-                  </SimpleErrorBoundary>
+                {/* Market Demand Widget - Enhanced card */}
+                <div className="animate-slide-up mt-8" data-coach-mark="market-demand" style={{ animationDelay: '0.2s' }}>
+                  <MarketDemandWidget />
                 </div>
               </div>
             </div>
-          </Suspense>
-        </SimpleErrorBoundary>
-      </div>
-    )
-  } catch (error) {
-    console.error('Error in DashboardPage:', error)
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-lg shadow-lg p-6 text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            Dashboard Error
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Unable to load the dashboard. Please try refreshing the page.
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-          >
-            Reload Page
-          </button>
+
+            {/* Footer spacing */}
+            <div className="h-8"></div>
+          </div>
         </div>
-      </div>
-    )
-  }
+
+        {/* Enhanced Filter Sidebar */}
+        <FilterSidebar
+          isOpen={isFilterSidebarOpen}
+          onClose={() => setIsFilterSidebarOpen(false)}
+        />
+      </main>
+    </div>
+  )
 }

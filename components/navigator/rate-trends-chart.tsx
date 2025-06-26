@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu"
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts"
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from "recharts"
 import { TrendingUp, Filter, Download, ChevronDown, Eye, EyeOff, ArrowUp, ArrowDown, Minus, BarChart3, Star, Settings, Maximize2, RefreshCw } from "lucide-react"
 import { useDateContext } from "@/components/date-context"
 import { format, eachDayOfInterval, differenceInDays } from "date-fns"
@@ -52,186 +52,93 @@ interface ChannelTrendData {
   icon?: string
 }
 
-/**
- * Enhanced Rate Data Generation with Error Handling
- * Generates realistic rate data for hotel pricing analysis with comprehensive error handling
- * 
- * @param {Date} startDate - The start date for data generation
- * @param {Date} endDate - The end date for data generation
- * @returns {RateData[]} Array of rate data objects with deterministic pricing
- * 
- * @throws {Error} When date parameters are invalid
- * @author Revenue Management System
- * @version 2.0.0
- */
 const generateRateData = (startDate: Date, endDate: Date): RateData[] => {
-  // Input validation with detailed error messages
-  if (!startDate || !endDate) {
-    console.error('🚨 generateRateData: Invalid date parameters', { startDate, endDate })
-    throw new Error('Start date and end date are required')
-  }
-
-  if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
-    console.error('🚨 generateRateData: Parameters must be Date objects', { 
-      startDateType: typeof startDate, 
-      endDateType: typeof endDate 
-    })
-    throw new Error('Parameters must be valid Date objects')
-  }
-
-  if (startDate >= endDate) {
-    console.error('🚨 generateRateData: Invalid date range', { startDate, endDate })
-    throw new Error('Start date must be before end date')
-  }
-
-  try {
-    const baseData: RateData[] = []
-    const days = eachDayOfInterval({ start: startDate, end: endDate })
+  const baseData: RateData[] = []
+  const days = eachDayOfInterval({ start: startDate, end: endDate })
+  
+  console.log('🏨 Generating realistic rate data with dynamic pricing variations')
+  
+  // Generate daily data for the selected date range
+  days.forEach((d, index) => {
+    const date = format(d, 'yyyy-MM-dd')
+    const dayOfWeek = d.getDay()
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
     
-    console.log('🏨 Generating realistic rate data with dynamic pricing variations')
-    console.log('📅 Date range details:', {
-      start: startDate.toISOString(),
-      end: endDate.toISOString(),
-      totalDays: days.length
-    })
+    // Base rates with realistic variations and seasonal trends
+    const baseRate = 280 + (Math.random() - 0.5) * 40
+    const weekendMultiplier = isWeekend ? 1.15 : 1.0
+    const seasonalFactor = 1 + 0.2 * Math.sin((index / days.length) * Math.PI * 2)
     
-    // Generate daily data for the selected date range with error handling
-    days.forEach((d, index) => {
-      try {
-        // Validate each date object
-        if (!(d instanceof Date) || isNaN(d.getTime())) {
-          console.warn('⚠️ Invalid date encountered, skipping:', d)
-          return
-        }
-
-        const date = format(d, 'yyyy-MM-dd')
-        const dayOfWeek = d.getDay()
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
-        
-        // Base rates with realistic variations and seasonal trends
-        // Using deterministic calculations to prevent hydration mismatches
-        const baseRate = 280 + ((d.getTime() % 1000) / 1000 - 0.5) * 40
-        const weekendMultiplier = isWeekend ? 1.15 : 1.0
-        const seasonalFactor = 1 + 0.2 * Math.sin((index / days.length) * Math.PI * 2)
-        
-        // Add special events (simulate events every 10-15 days)
-        const events: string[] = []
-        const dayOfMonth = d.getDate()
-        if (dayOfMonth >= 15 && dayOfMonth <= 17 && d.getMonth() % 2 === 0) {
-          events.push("Tech Conference")
-        }
-        if (dayOfMonth >= 25 && dayOfMonth <= 27 && d.getMonth() % 3 === 0) {
-          events.push("Music Festival") 
-        }
-        if (dayOfMonth >= 5 && dayOfMonth <= 7 && d.getMonth() % 4 === 0) {
-          events.push("Trade Show")
-        }
-        
-        const eventMultiplier = events.length > 0 ? 1.25 : 1.0
-        
-        // Add market trends based on date range length
-        const trendFactor = days.length > 30 ? 1 + (index / days.length) * 0.1 : 1.0
-        
-        // Dynamic pricing with realistic market variations
-        const dayVariation = Math.sin(index * 0.3) * 0.15 // Daily market fluctuations
-        const randomFactor = ((d.getTime() % 2000) / 2000 - 0.5) * 0.1 // Deterministic market noise
-        const competitionFactor = index % 7 === 0 ? 0.9 : 1.0 // Weekly promotional cycles
-        
-        // Base multipliers for each hotel with daily variations
-        const hotelMultipliers = {
-          direct: 1.0 + dayVariation + randomFactor, // My Hotel - competitive positioning
-          competitor1: 1.12 + (Math.sin(index * 0.2) * 0.08) + randomFactor, // Grand Plaza - variable premium
-          competitor2: 1.25 + (Math.sin(index * 0.4) * 0.1) + randomFactor, // Emirates Palace - luxury fluctuations
-          competitor3: 1.18 + (Math.sin(index * 0.15) * 0.12) + randomFactor, // Atlantis - resort seasonality
-          competitor4: 1.45 + (Math.sin(index * 0.1) * 0.05) + randomFactor, // Burj Al Arab - stable ultra-luxury
-          competitor5: 1.22 + (Math.sin(index * 0.25) * 0.09) + randomFactor, // Four Seasons - luxury variations
-          competitor6: 1.35 + (Math.sin(index * 0.35) * 0.07) + randomFactor, // Armani - designer premium
-          competitor7: 1.08 + (Math.sin(index * 0.45) * 0.15) + randomFactor * competitionFactor, // JW Marriott - business competitive
-          competitor8: 1.28 + (Math.sin(index * 0.3) * 0.11) + randomFactor, // Palazzo Versace - Italian luxury
-          competitor9: 1.15 + (Math.sin(index * 0.5) * 0.13) + randomFactor, // Madinat Jumeirah - resort variations
-          competitor10: 1.20 + (Math.sin(index * 0.2) * 0.1) + randomFactor, // Ritz-Carlton - consistent luxury
-        }
-        
-        // Create rate data object with proper error handling
-        const rateData: RateData = {
-          date,
-          timestamp: d.getTime(),
-          direct: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.direct),
-          competitor1: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor1),
-          competitor2: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor2),
-          competitor3: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor3),
-          competitor4: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor4),
-          competitor5: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor5),
-          competitor6: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor6),
-          competitor7: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor7),
-          competitor8: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor8),
-          competitor9: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor9),
-          competitor10: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor10),
-          occupancy: Math.round(75 + ((d.getTime() % 3000) / 3000 - 0.5) * 30 + (events.length * 10)),
-          events: events.length > 0 ? events : undefined,
-        }
-
-        // Validate generated data
-        if (isNaN(rateData.direct) || rateData.direct <= 0) {
-          console.warn('⚠️ Invalid rate data generated, using fallback:', { date, rateData })
-          rateData.direct = 280 // Fallback rate
-        }
-
-        baseData.push(rateData)
-        
-      } catch (dayError) {
-        console.error('🚨 Error processing day:', { date: d, error: dayError })
-        // Continue processing other days
-      }
-    })
-    
-    // Validation and debugging output
-    if (baseData.length === 0) {
-      console.error('🚨 No rate data generated')
-      throw new Error('Failed to generate any rate data')
+    // Add special events (simulate events every 10-15 days)
+    const events: string[] = []
+    const dayOfMonth = d.getDate()
+    if (dayOfMonth >= 15 && dayOfMonth <= 17 && d.getMonth() % 2 === 0) {
+      events.push("Tech Conference")
     }
-
-    // Log sample positioning data for verification
-    if (baseData.length > 0) {
-      const sampleDay = baseData[Math.floor(baseData.length / 2)]
-      const rates = [
-        { name: 'My Hotel', rate: sampleDay.direct },
-        { name: 'Grand Plaza', rate: sampleDay.competitor1 },
-        { name: 'JW Marriott', rate: sampleDay.competitor7 }
-      ].sort((a, b) => a.rate - b.rate)
-      
-      console.log('📊 Sample day pricing positions:', rates.map((h, i) => `#${i + 1}: ${h.name} ($${h.rate})`).join(', '))
-      console.log('✅ Rate data generation completed successfully:', {
-        totalDays: baseData.length,
-        dateRange: `${baseData[0].date} to ${baseData[baseData.length - 1].date}`
-      })
+    if (dayOfMonth >= 25 && dayOfMonth <= 27 && d.getMonth() % 3 === 0) {
+      events.push("Music Festival") 
+    }
+    if (dayOfMonth >= 5 && dayOfMonth <= 7 && d.getMonth() % 4 === 0) {
+      events.push("Trade Show")
     }
     
-    return baseData
-
-  } catch (error) {
-    console.error('🚨 Critical error in generateRateData:', error)
+    const eventMultiplier = events.length > 0 ? 1.25 : 1.0
     
-    // Return fallback data to prevent complete failure
-    console.log('🔄 Returning fallback rate data')
-    return [{
-      date: format(startDate, 'yyyy-MM-dd'),
-      timestamp: startDate.getTime(),
-      direct: 280,
-      competitor1: 315,
-      competitor2: 350,
-      competitor3: 330,
-      competitor4: 405,
-      competitor5: 342,
-      competitor6: 378,
-      competitor7: 302,
-      competitor8: 358,
-      competitor9: 322,
-      competitor10: 336,
-      occupancy: 75,
-      events: undefined
-    }]
+    // Add market trends based on date range length
+    const trendFactor = days.length > 30 ? 1 + (index / days.length) * 0.1 : 1.0
+    
+    // Dynamic pricing with realistic market variations
+    const dayVariation = Math.sin(index * 0.3) * 0.15 // Daily market fluctuations
+    const randomFactor = (Math.random() - 0.5) * 0.1 // Random market noise
+    const competitionFactor = index % 7 === 0 ? 0.9 : 1.0 // Weekly promotional cycles
+    
+    // Base multipliers for each hotel with daily variations
+    const hotelMultipliers = {
+      direct: 1.0 + dayVariation + randomFactor, // My Hotel - competitive positioning
+      competitor1: 1.12 + (Math.sin(index * 0.2) * 0.08) + randomFactor, // Grand Plaza - variable premium
+      competitor2: 1.25 + (Math.sin(index * 0.4) * 0.1) + randomFactor, // Emirates Palace - luxury fluctuations
+      competitor3: 1.18 + (Math.sin(index * 0.15) * 0.12) + randomFactor, // Atlantis - resort seasonality
+      competitor4: 1.45 + (Math.sin(index * 0.1) * 0.05) + randomFactor, // Burj Al Arab - stable ultra-luxury
+      competitor5: 1.22 + (Math.sin(index * 0.25) * 0.09) + randomFactor, // Four Seasons - luxury variations
+      competitor6: 1.35 + (Math.sin(index * 0.35) * 0.07) + randomFactor, // Armani - designer premium
+      competitor7: 1.08 + (Math.sin(index * 0.45) * 0.15) + randomFactor * competitionFactor, // JW Marriott - business competitive
+      competitor8: 1.28 + (Math.sin(index * 0.3) * 0.11) + randomFactor, // Palazzo Versace - Italian luxury
+      competitor9: 1.15 + (Math.sin(index * 0.5) * 0.13) + randomFactor, // Madinat Jumeirah - resort variations
+      competitor10: 1.20 + (Math.sin(index * 0.2) * 0.1) + randomFactor, // Ritz-Carlton - consistent luxury
+    }
+    
+    baseData.push({
+      date,
+      timestamp: d.getTime(),
+      direct: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.direct),
+      competitor1: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor1),
+      competitor2: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor2),
+      competitor3: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor3),
+      competitor4: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor4),
+      competitor5: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor5),
+      competitor6: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor6),
+      competitor7: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor7),
+      competitor8: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor8),
+      competitor9: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor9),
+      competitor10: Math.round(baseRate * weekendMultiplier * seasonalFactor * eventMultiplier * trendFactor * hotelMultipliers.competitor10),
+      occupancy: Math.round(75 + (Math.random() - 0.5) * 30 + (events.length * 10)),
+      events: events.length > 0 ? events : undefined,
+    })
+  })
+  
+  // Log sample positioning data for verification
+  if (baseData.length > 0) {
+    const sampleDay = baseData[Math.floor(baseData.length / 2)]
+    const rates = [
+      { name: 'My Hotel', rate: sampleDay.direct },
+      { name: 'Grand Plaza', rate: sampleDay.competitor1 },
+      { name: 'JW Marriott', rate: sampleDay.competitor7 }
+    ].sort((a, b) => a.rate - b.rate)
+    
+    console.log('📊 Sample day pricing positions:', rates.map((h, i) => `#${i + 1}: ${h.name} ($${h.rate})`).join(', '))
   }
+  
+  return baseData
 }
 
 /**
@@ -671,81 +578,38 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 }
 
 /**
- * Rate Trends Chart Component with Enhanced Error Handling
- * Professional rate trends visualization with comprehensive error handling and debugging
+ * Rate Trends Chart Component
  * 
- * @returns {JSX.Element} Rate trends chart with fallback error states
- * @author Revenue Management System
+ * Advanced chart component with:
+ * - Multiple visualization types (Line, Area, Bar)
+ * - Interactive channel visibility controls
+ * - Real-time data filtering
+ * - Professional styling with brand colors
+ * - Comprehensive tooltips and legends
+ * - Event markers and annotations
+ * - Performance optimization
+ * 
+ * @component
  * @version 2.0.0
  */
 export function RateTrendsChart() {
-  const { startDate, endDate, isLoading } = useDateContext()
-  const [activeTab, setActiveTab] = useState<'chart' | 'table'>('chart')
+  const { startDate, endDate } = useDateContext()
+  
+  // State management
+  const [activeTab, setActiveTab] = useState('chart')
   const [chartType, setChartType] = useState<'line' | 'area' | 'bar'>('line')
-  const [isRefreshing, setIsRefreshing] = useState(false)
   const [channelVisibility, setChannelVisibility] = useState<Record<string, boolean>>(() => {
-    try {
-      const initial: Record<string, boolean> = {}
-      channelConfigs.forEach(config => {
-        initial[config.key] = config.isVisible
-      })
-      return initial
-    } catch (error) {
-      console.error('🚨 Error initializing channel visibility:', error)
-      return {}
-    }
+    const initial: Record<string, boolean> = {}
+    channelConfigs.forEach(config => {
+      initial[config.key] = config.isVisible
+    })
+    return initial
   })
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  // Error state management
-  const [hasError, setHasError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string>('')
-
-  /**
-   * Enhanced data generation with comprehensive error handling
-   * Prevents hydration mismatches and provides fallback data
-   */
-  const data = useMemo(() => {
-    try {
-      console.log('🔄 Generating rate trends data...', { startDate, endDate })
-      
-      if (!startDate || !endDate) {
-        console.warn('⚠️ Missing date context, using fallback dates')
-        const fallbackEnd = new Date()
-        const fallbackStart = new Date()
-        fallbackStart.setDate(fallbackEnd.getDate() - 30)
-        return generateRateData(fallbackStart, fallbackEnd)
-      }
-
-      const result = generateRateData(startDate, endDate)
-      setHasError(false) // Clear any previous errors
-      return result
-
-    } catch (error) {
-      console.error('🚨 Error in rate trends data generation:', error)
-      setHasError(true)
-      setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
-      
-      // Return minimal fallback data
-      return [{
-        date: '2025-06-25',
-        timestamp: Date.now(),
-        direct: 280,
-        competitor1: 315,
-        competitor2: 350,
-        competitor3: 330,
-        competitor4: 405,
-        competitor5: 342,
-        competitor6: 378,
-        competitor7: 302,
-        competitor8: 358,
-        competitor9: 322,
-        competitor10: 336,
-        occupancy: 75,
-        events: undefined
-      }]
-    }
-  }, [startDate, endDate])
-
+  // Generate data
+  const data = useMemo(() => generateRateData(startDate, endDate), [startDate, endDate])
+  
   // Filter visible channels
   const visibleChannels = channelConfigs.filter(config => channelVisibility[config.key])
   
@@ -790,37 +654,6 @@ export function RateTrendsChart() {
     return badgeClasses[trend]
   }
 
-  // Error boundary and loading states
-  if (hasError) {
-    return (
-      <Card className="chart-container-minimal animate-fade-in border-red-200 bg-red-50">
-        <CardHeader>
-          <CardTitle className="text-red-700 flex items-center gap-2">
-            ⚠️ Rate Trends Analysis - Error
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-red-600 mb-4">
-              Unable to load rate trends data: {errorMessage}
-            </p>
-            <Button 
-              onClick={() => {
-                setHasError(false)
-                setErrorMessage('')
-                window.location.reload()
-              }}
-              variant="outline"
-              className="text-red-700 border-red-300 hover:bg-red-100"
-            >
-              Retry Loading
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
     <Card className="chart-container-minimal animate-fade-in">
       <CardHeader className="pb-4">
@@ -835,21 +668,23 @@ export function RateTrendsChart() {
           </div>
           
           {/* General Action Controls - Only Export and Refresh */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Refresh Button */}
             <Button 
               variant="outline" 
               size="sm" 
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="btn-minimal h-8 w-8 p-0"
+              className="btn-minimal gap-2"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh
             </Button>
 
             {/* Download Button */}
-            <Button variant="outline" size="sm" className="btn-minimal h-8 w-8 p-0">
+            <Button variant="outline" size="sm" className="btn-minimal gap-2">
               <Download className="w-4 h-4" />
+              Export
             </Button>
           </div>
         </div>
@@ -1036,7 +871,7 @@ export function RateTrendsChart() {
                       className="text-xs"
                     />
                     <YAxis className="text-xs" />
-                    <RechartsTooltip content={<CustomTooltip />} />
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {chartChannels.map((config) => (
                       <Line
@@ -1062,7 +897,7 @@ export function RateTrendsChart() {
                       className="text-xs"
                     />
                     <YAxis className="text-xs" />
-                    <RechartsTooltip content={<CustomTooltip />} />
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {chartChannels.map((config) => (
                       <Area
@@ -1088,7 +923,7 @@ export function RateTrendsChart() {
                       className="text-xs"
                     />
                     <YAxis className="text-xs" />
-                    <RechartsTooltip content={<CustomTooltip />} />
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend />
                     {chartChannels.slice(0, 4).map((config) => ( // Show My Hotel + up to 3 competitors
                       <Bar

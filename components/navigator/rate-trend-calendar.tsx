@@ -8,7 +8,6 @@ import { RateTrendGraph } from "./rate-trend-graph"
 import { RateDetailModal } from "./rate-detail-modal"
 import { useDateContext } from "@/components/date-context"
 import { useState, useEffect, useMemo } from "react"
-import { differenceInDays, isAfter, isBefore } from "date-fns"
 
 interface CalendarDay {
   date: number
@@ -213,7 +212,7 @@ const generateCalendarData = (startDateRange: Date, endDateRange: Date): Calenda
         month,
         year,
         currentPrice,
-        comparison: `${(date + month + year) % 2 === 0 ? '-' : '+'}${Math.floor(((date + month + year) % 30) + 40)}% vs. Comp`,
+        comparison: `${Math.random() > 0.5 ? '-' : '+'}${Math.floor(Math.random() * 30 + 40)}% vs. Comp`,
         isFuture,
         dayOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][currentDate.getDay()]
       }
@@ -264,36 +263,6 @@ export function RateTrendCalendar({ currentView }: RateTrendCalendarProps) {
   const [currentWeekIndex, setCurrentWeekIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDateForModal, setSelectedDateForModal] = useState<Date | null>(null)
-
-  // Function to determine period text based on date range
-  const getPeriodText = () => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const daysDiff = differenceInDays(endDate, startDate) + 1
-    
-    // Check if it's a future period
-    if (isAfter(startDate, today)) {
-      if (daysDiff === 7) return "Next 7 days"
-      if (daysDiff === 14) return "Next 14 days"
-      if (daysDiff === 30) return "Next 30 days"
-      if (daysDiff === 60) return "Next 60 days"
-      if (daysDiff === 90) return "Next 90 days"
-      return `Next ${daysDiff} days`
-    }
-    
-    // Check if it's a past period
-    if (isBefore(endDate, today)) {
-      if (daysDiff === 7) return "Last 7 days"
-      if (daysDiff === 14) return "Last 14 days"
-      if (daysDiff === 30) return "Last 30 days"
-      if (daysDiff === 60) return "Last 60 days"
-      if (daysDiff === 90) return "Last 90 days"
-      return `Last ${daysDiff} days`
-    }
-    
-    // Mixed period (includes today)
-    return `${daysDiff} days period`
-  }
   
   // Generate calendar data based on selected date range
   const calendarData = useMemo(() => {
@@ -996,14 +965,11 @@ export function RateTrendCalendar({ currentView }: RateTrendCalendarProps) {
         {/* Desktop View - Full Calendar Grid */}
         <div className="hidden lg:block p-6">
           {/* Date Range Header */}
-          <div className="mb-2 p-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400">
               <Calendar className="w-4 h-4" />
-              <span className="font-medium">
-                {getPeriodText()}
-              </span>
-              <span className="text-xs">
-                ({startDate.toLocaleDateString()} - {endDate.toLocaleDateString()})
+              <span>
+                Showing: {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
               </span>
               {calendarData.some(week => week.some(day => day.isFuture && day.recommendedPrice)) && (
                 <Badge variant="outline" className="ml-2 bg-emerald-50 text-emerald-700 border-emerald-200">
