@@ -42,12 +42,10 @@ interface ChannelTrendData {
   id: string
   channel: string
   myRate: number
-  bookings: number
   competitor: number
   variance: number
   variancePercent: number
   trend: 'stable' | 'up' | 'down'
-  share: number
   isFeatured?: boolean
   icon?: string
 }
@@ -150,12 +148,10 @@ const channelTrendsData: ChannelTrendData[] = [
     id: 'direct-website',
     channel: 'Direct Website',
     myRate: 1950,
-    bookings: 94,
     competitor: 1580,
     variance: 370,
     variancePercent: 23.4,
     trend: 'stable',
-    share: 18,
     isFeatured: true,
     icon: '🏢'
   },
@@ -163,84 +159,70 @@ const channelTrendsData: ChannelTrendData[] = [
     id: 'booking-com',
     channel: 'Booking.com',
     myRate: 2100,
-    bookings: 132,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'down',
-    share: 24,
     icon: '🔵'
   },
   {
     id: 'expedia',
     channel: 'Expedia',
     myRate: 2100,
-    bookings: 87,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'down',
-    share: 19,
     icon: '✈️'
   },
   {
     id: 'agoda',
     channel: 'Agoda',
     myRate: 2100,
-    bookings: 68,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'down',
-    share: 16,
     icon: '🔴'
   },
   {
     id: 'hotels-com',
     channel: 'Hotels.com',
     myRate: 2100,
-    bookings: 45,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'down',
-    share: 12,
     icon: '🏨'
   },
   {
     id: 'kayak',
     channel: 'Kayak',
     myRate: 2100,
-    bookings: 28,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'down',
-    share: 6,
     icon: '🛶'
   },
   {
     id: 'priceline',
     channel: 'Priceline',
     myRate: 2100,
-    bookings: 18,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'stable',
-    share: 3,
     icon: '💰'
   },
   {
     id: 'orbitz',
     channel: 'Orbitz',
     myRate: 2100,
-    bookings: 12,
     competitor: 1580,
     variance: 520,
     variancePercent: 32.9,
     trend: 'stable',
-    share: 2,
     icon: '🌐'
   }
 ]
@@ -970,10 +952,8 @@ export function RateTrendsChart() {
                   <TableRow>
                     <TableHead className="w-[200px]">Channel</TableHead>
                     <TableHead className="text-right">My Rate</TableHead>
-                    <TableHead className="text-right">Bookings</TableHead>
                     <TableHead className="text-right">Competitor</TableHead>
                     <TableHead className="text-right">Variance</TableHead>
-                    <TableHead className="text-right">Market Share</TableHead>
                     <TableHead className="text-center">Trend</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -996,9 +976,6 @@ export function RateTrendsChart() {
                       <TableCell className="text-right font-mono font-semibold">
                         ${channel.myRate.toLocaleString()}
                       </TableCell>
-                      <TableCell className="text-right font-semibold">
-                        {channel.bookings}
-                      </TableCell>
                       <TableCell className="text-right font-mono">
                         ${channel.competitor.toLocaleString()}
                       </TableCell>
@@ -1012,17 +989,6 @@ export function RateTrendsChart() {
                           <span className="text-xs text-muted-foreground">
                             ({channel.variancePercent > 0 ? '+' : ''}{channel.variancePercent}%)
                           </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <span className="font-semibold">{channel.share}%</span>
-                          <div className="w-12 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-blue-500 rounded-full transition-all duration-300"
-                              style={{ width: `${Math.min(100, channel.share * 4)}%` }}
-                            />
-                          </div>
                         </div>
                       </TableCell>
                       <TableCell className="text-center">

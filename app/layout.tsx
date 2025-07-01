@@ -7,6 +7,7 @@ import { LayoutContent } from "@/components/layout-content"
 import { ThemeProvider } from "@/components/theme-provider"
 import { DateProvider } from "@/components/date-context"
 import ErrorBoundary from "@/components/error-boundary"
+import { Toaster } from "@/components/ui/toaster"
 
 /**
  * Root Layout Metadata
@@ -72,6 +73,8 @@ export default function RootLayout({
               {/* Fixed Header - Appears on all pages */}
               <Header />
               <LayoutContent>{children}</LayoutContent>
+              {/* Toast notifications */}
+              <Toaster />
             </DateProvider>
           </ThemeProvider>
         </ErrorBoundary>

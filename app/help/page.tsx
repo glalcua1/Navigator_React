@@ -30,8 +30,10 @@ import {
   Bookmark,
   Headphones,
   Globe,
-  Award
+  Award,
+  X
 } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import Link from "next/link"
 import { SupportTicketForm } from "@/components/navigator/support-ticket-form"
 
@@ -46,6 +48,7 @@ interface KnowledgeArticle {
   type: "article" | "video" | "guide" | "faq"
   popular?: boolean
   new?: boolean
+  fullContent?: string
 }
 
 interface VideoTutorial {
@@ -69,7 +72,125 @@ const knowledgeArticles: KnowledgeArticle[] = [
     tags: ["dashboard", "overview", "basics"],
     type: "guide",
     popular: true,
-    new: true
+    new: true,
+    fullContent: `
+# Getting Started with Rate Parity Dashboard
+
+Welcome to your comprehensive rate parity dashboard! This guide will walk you through all the essential features and help you maximize your revenue management efficiency.
+
+## Overview
+
+The Rate Parity Dashboard is designed to give you complete visibility into your pricing strategy across all distribution channels. With real-time data and advanced analytics, you can make informed decisions that drive revenue growth.
+
+## Key Sections
+
+### 1. Revenue Dashboard (Overview)
+Your main dashboard provides a bird's-eye view of your property's performance:
+
+- **Revenue Insights**: Critical alerts about rate parity violations, demand surges, and market movements
+- **KPI Cards**: Essential metrics like occupancy, ADR, RevPAR, and parity score
+- **Rate Trends Analysis**: Interactive charts showing your rates compared to competitors
+- **Market Demand**: Source market analysis and local events impact
+
+### 2. Rate Trends Page
+Deep dive into competitive analysis:
+
+- **Rate Chart**: Visual comparison of your rates vs competitors over time
+- **Channel Analysis**: Performance breakdown by distribution channel
+- **Calendar View**: Day-by-day rate positioning analysis
+
+### 3. Demand Page
+Understand demand patterns:
+
+- **Demand Calendar**: Visual representation of demand levels
+- **Booking Pace**: Track how bookings are trending vs historical data
+- **Occupancy Forecasts**: Predict future occupancy levels
+
+## Getting Started Steps
+
+### Step 1: Set Your Date Range
+Use the date picker in the top navigation to select your analysis period. Most views default to the next 30 days, but you can adjust based on your needs.
+
+### Step 2: Configure Alerts
+Navigate to the alerts section to set up automated notifications for:
+- Rate parity violations
+- Significant competitor rate changes
+- Demand surge alerts
+- Market opportunity notifications
+
+### Step 3: Understand Your Metrics
+
+**Key Performance Indicators:**
+- **Occupancy Rate**: Percentage of rooms sold vs available
+- **Average Daily Rate (ADR)**: Average price per occupied room
+- **Revenue Per Available Room (RevPAR)**: Total room revenue ÷ total rooms available
+- **Parity Score**: Percentage of time your rates match or beat competitor rates
+
+### Step 4: Monitor Competitor Performance
+The Rate Trends section shows how your property compares to up to 10 competitors. Use the visibility controls to focus on your most important competitive set.
+
+### Step 5: Leverage Market Intelligence
+The Market Demand widget shows:
+- Source market performance
+- Local events and their impact
+- Holiday and seasonal demand patterns
+
+## Best Practices
+
+### Daily Routine
+1. Check Revenue Insights for any critical alerts
+2. Review overnight rate changes in Rate Trends
+3. Monitor upcoming demand patterns
+4. Adjust rates based on competitive positioning
+
+### Weekly Review
+1. Analyze weekly performance trends
+2. Review competitor pricing strategies
+3. Plan for upcoming events and seasonality
+4. Optimize channel performance
+
+### Monthly Analysis
+1. Evaluate overall competitive positioning
+2. Assess source market performance
+3. Review and adjust alerting thresholds
+4. Plan strategic pricing initiatives
+
+## Advanced Features
+
+### Custom Date Ranges
+Click on any chart to drill down into specific time periods and analyze performance in detail.
+
+### Export Functionality
+All charts and data tables can be exported for further analysis or reporting to stakeholders.
+
+### Filter Controls
+Use the advanced filter sidebar to focus on specific room types, market segments, or booking channels.
+
+## Troubleshooting
+
+**Common Issues:**
+
+1. **Data Not Loading**: Check your date range selection and ensure you have proper access permissions
+2. **Missing Competitor Data**: Some competitors may not update rates regularly - this is normal
+3. **Alert Overload**: Adjust your alert thresholds in settings to reduce noise
+
+## Next Steps
+
+Now that you understand the basics, explore these advanced topics:
+- Setting up automated pricing rules
+- Creating custom competitive sets
+- Building stakeholder reports
+- Integrating with your PMS system
+
+## Support
+
+If you need additional help:
+- Check our FAQ section for common questions
+- Watch video tutorials for visual guides
+- Contact our 24/7 support team for personalized assistance
+
+Remember: The key to successful revenue management is consistent monitoring and quick response to market changes. Your dashboard provides all the tools you need to stay ahead of the competition!
+    `
   },
   {
     id: "2",
@@ -182,6 +303,7 @@ export default function HelpPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [showSupportForm, setShowSupportForm] = useState(false)
+  const [selectedArticle, setSelectedArticle] = useState<KnowledgeArticle | null>(null)
 
   const categories = [
     "all",
@@ -376,45 +498,128 @@ export default function HelpPage() {
               <TabsContent value="articles" className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredArticles.map((article) => (
-                    <Card key={article.id} className="card-minimal hover:shadow-lg transition-all duration-200 group cursor-pointer">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-2">
-                            <div className="p-1.5 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950">
-                              {getTypeIcon(article.type)}
+                    <div key={article.id}>
+                      {article.fullContent ? (
+                        // Clickable article with full content
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Card className="card-minimal hover:shadow-lg transition-all duration-200 group cursor-pointer">
+                              <CardHeader className="pb-3">
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="flex items-center gap-2">
+                                    <div className="p-1.5 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950">
+                                      {getTypeIcon(article.type)}
+                                    </div>
+                                    <Badge className={getDifficultyColor(article.difficulty)}>
+                                      {article.difficulty}
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    {article.popular && <Star className="w-4 h-4 text-amber-500" />}
+                                    {article.new && <Badge variant="secondary" className="text-xs">New</Badge>}
+                                    <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300 text-xs">
+                                      Full Guide
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <CardTitle className="text-lg font-semibold text-foregroup-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                                  {article.title}
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {article.description}
+                                </p>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                    <div className="flex items-center gap-1">
+                                      <Clock className="w-3 h-3" />
+                                      {article.readTime}
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <BookOpen className="w-3 h-3" />
+                                      {article.category}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-brand-600 dark:text-brand-400 group-hover:text-brand-700 dark:group-hover:text-brand-300 transition-colors">
+                                    <span className="text-xs font-medium">Read Full Guide</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle className="text-xl font-bold text-foreground">
+                                {article.title}
+                              </DialogTitle>
+                            </DialogHeader>
+                            <div className="mt-4">
+                              <div className="flex items-center gap-4 mb-6">
+                                <Badge className={getDifficultyColor(article.difficulty)}>
+                                  {article.difficulty}
+                                </Badge>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <Clock className="w-4 h-4" />
+                                  {article.readTime}
+                                </div>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <BookOpen className="w-4 h-4" />
+                                  {article.category}
+                                </div>
+                              </div>
+                              <div className="prose prose-slate dark:prose-invert max-w-none">
+                                <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                                  {article.fullContent}
+                                </div>
+                              </div>
                             </div>
-                            <Badge className={getDifficultyColor(article.difficulty)}>
-                              {article.difficulty}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {article.popular && <Star className="w-4 h-4 text-amber-500" />}
-                            {article.new && <Badge variant="secondary" className="text-xs">New</Badge>}
-                          </div>
-                        </div>
-                        <CardTitle className="text-lg font-semibold text-foregroup-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                          {article.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {article.description}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {article.readTime}
+                          </DialogContent>
+                        </Dialog>
+                      ) : (
+                        // Regular article card without full content
+                        <Card className="card-minimal hover:shadow-lg transition-all duration-200 group cursor-pointer">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-center gap-2">
+                                <div className="p-1.5 rounded-lg bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950">
+                                  {getTypeIcon(article.type)}
+                                </div>
+                                <Badge className={getDifficultyColor(article.difficulty)}>
+                                  {article.difficulty}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {article.popular && <Star className="w-4 h-4 text-amber-500" />}
+                                {article.new && <Badge variant="secondary" className="text-xs">New</Badge>}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <BookOpen className="w-3 h-3" />
-                              {article.category}
+                            <CardTitle className="text-lg font-semibold text-foregroup-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                              {article.title}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {article.description}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3" />
+                                  {article.readTime}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <BookOpen className="w-3 h-3" />
+                                  {article.category}
+                                </div>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" />
                             </div>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </div>
                   ))}
                 </div>
               </TabsContent>

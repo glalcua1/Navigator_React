@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,8 @@ import { PropertyHealthScoreWidget } from "@/components/navigator/property-healt
 import { FilterSidebar } from "@/components/filter-sidebar"
 import { CoachMarkTrigger } from "@/components/navigator/coach-mark-system"
 import { WeeklyPricingDrawer } from "@/components/weekly-pricing-drawer"
+import { CSATRatingCard } from "@/components/csat-rating-card"
+import { useScrollDetection } from "@/hooks/use-scroll-detection"
 import { 
   Activity, 
   TrendingUp, 
@@ -116,7 +118,7 @@ const insights = [
     id: 'demand-surge',
     type: 'opportunity',
     title: 'Demand Surge Detected',
-    description: 'Tech conference driving 35% demand increase next week',
+    description: 'Dubai Shopping Festival driving 35% demand increase next week',
     action: 'Optimize Pricing',
     impact: 'Revenue Opportunity',
     value: '+$8,500/week',
@@ -210,10 +212,37 @@ function getInsightStyling(type: string) {
  */
 export default function Home() {
   const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false)
+  const [showCSATCard, setShowCSATCard] = useState(false)
+  const [csatClosed, setCSATClosed] = useState(false)
+
+  // Scroll detection for CSAT card
+  const { hasTriggered, resetTrigger } = useScrollDetection({
+    threshold: 0.9, // Show when 90% scrolled (very close to bottom)
+    minScrollDistance: 1200, // After scrolling at least 1200px
+    oncePerSession: true // Only show once per session
+  })
+
+  // Show CSAT card when triggered
+  useEffect(() => {
+    if (hasTriggered && !showCSATCard && !csatClosed) {
+      console.log('🎯 Showing CSAT card after scroll trigger')
+      // Add a small delay for better UX
+      const timer = setTimeout(() => {
+        setShowCSATCard(true)
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [hasTriggered, showCSATCard, csatClosed])
 
   const handleMoreFiltersClick = () => {
     setIsFilterSidebarOpen(true)
     console.log("🔍 Opening filter sidebar")
+  }
+
+  const handleCSATClose = () => {
+    setShowCSATCard(false)
+    setCSATClosed(true)
+    console.log('🎯 CSAT card closed by user')
   }
 
   return (
@@ -355,6 +384,11 @@ export default function Home() {
           isOpen={isFilterSidebarOpen}
           onClose={() => setIsFilterSidebarOpen(false)}
         />
+
+        {/* CSAT Rating Card - appears when user scrolls near bottom */}
+        {showCSATCard && (
+          <CSATRatingCard onClose={handleCSATClose} />
+        )}
       </main>
     </div>
   )
