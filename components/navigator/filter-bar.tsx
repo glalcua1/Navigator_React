@@ -157,6 +157,48 @@ export function FilterBar({ onMoreFiltersClick }: FilterBarProps) {
                 />
               </div>
 
+              {/* Compare with Date Dropdown */}
+              <div className="shrink-0">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-10 gap-2 px-4 font-medium transition-all duration-200 shrink-0 shadow-sm hover:shadow-md hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700"
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span className="truncate max-w-[140px] font-semibold">
+                        Compare with Date
+                      </span>
+                      <ChevronDown className="w-4 h-4 opacity-70" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-64 shadow-xl border-slate-200 dark:border-slate-700">
+                    <DropdownMenuItem
+                      onSelect={() => console.log("Last Report selected")}
+                      className="cursor-pointer py-3 px-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                      <Calendar className="w-4 h-4 mr-3 opacity-70" />
+                      <span className="font-medium">Last Report</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => console.log("MoM selected")}
+                      className="cursor-pointer py-3 px-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                      <Calendar className="w-4 h-4 mr-3 opacity-70" />
+                      <span className="font-medium">MoM</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => console.log("YoY selected")}
+                      className="cursor-pointer py-3 px-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                      <Calendar className="w-4 h-4 mr-3 opacity-70" />
+                      <span className="font-medium">YoY</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
               {/* Divider */}
               <div className="hidden sm:block w-px h-6 bg-border shrink-0" />
 

@@ -246,7 +246,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950" data-coach-mark="dashboard-overview">
       {/* Enhanced Filter Bar with Sticky Positioning */}
       <div className="sticky top-0 z-40 filter-bar-minimal bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-border/50 shadow-sm transition-shadow duration-200">
         <FilterBar onMoreFiltersClick={handleMoreFiltersClick} />
@@ -268,23 +268,6 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex items-center gap-6">
-                <div data-coach-mark="weekly-pricing">
-                  <WeeklyPricingDrawer>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 font-semibold px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-700 dark:hover:border-slate-600 dark:text-slate-200 dark:hover:text-slate-100"
-                    >
-                      <DollarSign className="w-4 h-4 mr-2" />
-                      View Weekly Pricing Strategy
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </WeeklyPricingDrawer>
-                </div>
-                
-                {/* Separator Line */}
-                <div className="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
-                
                 <Badge className="badge-minimal bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300">
                   <Activity className="w-3 h-3 mr-1" />
                   Live Property
@@ -293,59 +276,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Revenue Insights - Enhanced with MUI styling */}
-            <Card className="card-elevated animate-fade-in mb-8">
-              <CardContent className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-minimal-subtitle text-foreground">
-                      Revenue Insights
-                    </h3>
-                  </div>
-                  <Badge className="badge-minimal bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                    Real-time
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-minimal-md">
-                  {insights.map((insight) => {
-                    const styling = getInsightStyling(insight.type)
-                    
-                    return (
-                      <div
-                        key={insight.id}
-                        className={`card-interactive p-6 ${styling.bg}`}
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className={`w-1.5 h-16 rounded-full ${styling.accent} flex-shrink-0`} />
-                          <div className="flex-1 min-w-0 space-y-3">
-                            <div className="flex items-start justify-between gap-2">
-                              <h4 className={`text-minimal-subtitle font-semibold ${styling.text}`}>
-                                {insight.title}
-                              </h4>
-                              <Badge className={`badge-minimal ${styling.badge} text-xs`}>
-                                {insight.urgency}
-                              </Badge>
-                            </div>
-                            <p className={`text-minimal-body ${styling.text} opacity-90`}>
-                              {insight.description}
-                            </p>
-                            <div className="flex items-center justify-between pt-2">
-                              <div className={`text-sm font-bold ${styling.text}`}>
-                                {insight.value}
-                              </div>
-                              <div className={`text-xs font-medium ${styling.text} opacity-75 italic`}>
-                                Guidance: {insight.action}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+
 
             {/* KPI Cards - Enhanced with proper spacing */}
             <div className="w-full animate-slide-up" data-coach-mark="kpi-cards">

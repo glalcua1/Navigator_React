@@ -43,26 +43,13 @@ const coachMarks: CoachMark[] = [
     priority: 1
   },
   {
-    id: "weekly-pricing",
-    title: "📊 Weekly Pricing Strategy",
-    description: "Start here every Monday! This shows your optimized pricing strategy for the week ahead, including weekend premiums, event-driven rates, and competitive positioning. Essential for weekly rate planning.",
-    target: "[data-coach-mark='weekly-pricing']",
-    position: "bottom",
-    category: "actions",
-    priority: 2,
-    action: {
-      type: "click",
-      description: "Click to view this week's pricing strategy"
-    }
-  },
-  {
     id: "revenue-kpis",
     title: "💰 Revenue Performance KPIs",
     description: "Your daily revenue health check. Monitor ADR trends, rate parity violations, and market position. Red indicators need immediate attention - they're costing you revenue right now.",
     target: "[data-coach-mark='kpi-cards']",
     position: "top",
     category: "data",
-    priority: 3
+    priority: 2
   },
   {
     id: "competitor-analysis",
@@ -71,7 +58,7 @@ const coachMarks: CoachMark[] = [
     target: "[data-coach-mark='rate-trends']",
     position: "top",
     category: "insights",
-    priority: 4,
+    priority: 3,
     action: {
       type: "hover",
       description: "Hover over chart points to see competitive threats and opportunities"
@@ -84,7 +71,7 @@ const coachMarks: CoachMark[] = [
     target: "[data-coach-mark='market-demand']",
     position: "top",
     category: "insights",
-    priority: 5,
+    priority: 4,
     action: {
       type: "click",
       description: "Explore source markets and events affecting demand"
@@ -97,7 +84,7 @@ const coachMarks: CoachMark[] = [
     target: "[data-coach-mark='property-health']",
     position: "top",
     category: "actions",
-    priority: 6
+    priority: 5
   },
   {
     id: "navigation-pages",
@@ -106,7 +93,7 @@ const coachMarks: CoachMark[] = [
     target: ".navigation-menu",
     position: "right",
     category: "navigation",
-    priority: 7,
+    priority: 6,
     action: {
       type: "click",
       description: "Explore demand forecasting and rate trend analysis"
@@ -119,7 +106,7 @@ const coachMarks: CoachMark[] = [
     target: "[data-coach-mark='dashboard-overview']",
     position: "bottom",
     category: "insights",
-    priority: 8
+    priority: 7
   }
 ]
 
